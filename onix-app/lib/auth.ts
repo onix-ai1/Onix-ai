@@ -34,7 +34,14 @@ export async function registerRequest(credentials: RegisterCredentials) {
       data: { full_name: credentials.fullName },
     },
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    const msg = error.message
+      ? error.message
+      : error.status === 500
+        ? 'Server error from Supabase. Please check your Supabase project email settings or try again shortly.'
+        : 'Registration failed. Please try again.';
+    throw new Error(msg);
+  }
   return data;
 }
 

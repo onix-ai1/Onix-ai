@@ -1,6 +1,62 @@
 import { createClient } from './supabase/client';
 
 /* ── Types ── */
+
+export interface Workspace {
+  id: string;
+  owner_id: string;
+  name: string;
+  description: string;
+  company: string;
+  industry: string;
+  website: string;
+  size: string;
+  created_at: string;
+}
+
+export interface WorkspaceMember {
+  id: string;
+  workspace_id: string;
+  user_id: string | null;
+  email: string;
+  role: 'owner' | 'admin' | 'member';
+  status: 'pending' | 'active';
+  invited_at: string;
+}
+
+export interface Outreach {
+  id: string;
+  user_id: string;
+  deal_id: string | null;
+  deal_name?: string;
+  contact_name: string;
+  contact_email: string;
+  subject: string;
+  message: string;
+  status: 'draft' | 'sent' | 'replied' | 'no_response' | 'meeting_scheduled';
+  sent_at: string | null;
+  replied_at: string | null;
+  notes: string;
+  created_at: string;
+}
+
+export interface Investor {
+  id: string;
+  user_id: string | null;
+  name: string;
+  firm: string;
+  focus_sector: string;
+  ticket_size: string;
+  stage_preference: string;
+  location: string;
+  contact_email: string;
+  website: string;
+  notes: string;
+  is_platform: boolean;
+  status: 'active' | 'inactive';
+  created_at: string;
+}
+
 export interface Deal {
   id: string;
   user_id: string;
@@ -156,4 +212,174 @@ export async function fetchDashboard(): Promise<DashboardData> {
       type: 'deal',
     })),
   };
+}
+
+/* ── Investors ── */
+
+export async function fetchInvestors(): Promise<Investor[]> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch platform investors + user's own investors
+  const { data, error } = await supabase
+    .from('investors')
+    .select('*')
+    .or(`is_platform.eq.true,user_id.eq.${user?.id}`)
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function createInvestor(payload: Partial<Investor>): Promise<Investor> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from('investors')
+    .insert([{ ...payload, user_id: user?.id, is_platform: false, status: 'active' }])
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function deleteInvestor(id: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('investors').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+/* ── Outreach ── */
+
+export async function fetchOutreach(): Promise<Outreach[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('outreach')
+    .select('*, deals(name)')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row: Outreach & { deals?: { name: string } | null }) => ({
+    ...row,
+    deal_name: row.deals?.name ?? '—',
+  }));
+}
+
+export async function createOutreach(payload: Partial<Outreach>): Promise<Outreach> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from('outreach')
+    .insert([{ ...payload, user_id: user?.id }])
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function updateOutreachStatus(id: string, status: Outreach['status']): Promise<Outreach> {
+  const supabase = createClient();
+  const updates: Partial<Outreach> = {
+    status,
+    updated_at: new Date().toISOString(),
+    ...(status === 'sent'    ? { sent_at:    new Date().toISOString() } : {}),
+    ...(status === 'replied' ? { replied_at: new Date().toISOString() } : {}),
+  } as Partial<Outreach>;
+
+  const { data, error } = await supabase
+    .from('outreach')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function deleteOutreach(id: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('outreach').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+/* ── Workspace ── */
+
+export async function fetchWorkspace(): Promise<Workspace | null> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from('workspaces')
+    .select('*')
+    .eq('owner_id', user.id)
+    .single();
+
+  return data ?? null;
+}
+
+export async function upsertWorkspace(payload: Partial<Workspace>): Promise<Workspace> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const existing = await fetchWorkspace();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from('workspaces')
+      .update({ ...payload, updated_at: new Date().toISOString() })
+      .eq('id', existing.id)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('workspaces')
+      .insert([{ ...payload, owner_id: user.id }])
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  }
+}
+
+export async function fetchWorkspaceMembers(workspaceId: string): Promise<WorkspaceMember[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('workspace_members')
+    .select('*')
+    .eq('workspace_id', workspaceId)
+    .order('invited_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function inviteMember(workspaceId: string, email: string, role: WorkspaceMember['role']): Promise<WorkspaceMember> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('workspace_members')
+    .insert([{ workspace_id: workspaceId, email, role, status: 'pending' }])
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function removeMember(memberId: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('workspace_members').delete().eq('id', memberId);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteWorkspace(workspaceId: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('workspaces').delete().eq('id', workspaceId);
+  if (error) throw new Error(error.message);
 }

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Restore cursor for all non-landing pages ── */
+/* landing.css sets cursor:none globally; this overrides it for app pages */
+body:not(.landing-page),
+body:not(.landing-page) * {
+  cursor: revert !important;
+}
+
 /* ── Dark theme (default) ── */
 :root,
 [data-theme="dark"] {

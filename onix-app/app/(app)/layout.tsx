@@ -17,18 +17,18 @@ const NAV_SECTIONS = [
     ],
   },
   {
-    label: 'COMING SOON',
+    label: 'NETWORK',
     items: [
-      { href: '#', label: 'Investors',   icon: UsersIcon,    count: null },
-      { href: '#', label: 'Outreach',    icon: MailIcon,     count: null },
-      { href: '#', label: 'AI Co-Pilot', icon: SparkIcon,    count: null },
+      { href: '/investors',  label: 'Investors',   icon: UsersIcon,  count: null },
+      { href: '/outreach',   label: 'Outreach',    icon: MailIcon,   count: null },
+      { href: '/copilot',    label: 'AI Co-Pilot', icon: SparkIcon,  count: null },
     ],
   },
   {
     label: 'SETTINGS',
     items: [
-      { href: '/profile', label: 'Profile',   icon: PersonIcon,   count: null },
-      { href: '#',        label: 'Workspace', icon: BuildingIcon, count: null },
+      { href: '/profile',   label: 'Profile',   icon: PersonIcon,   count: null },
+      { href: '/workspace', label: 'Workspace', icon: BuildingIcon, count: null },
     ],
   },
 ];
@@ -59,7 +59,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--onix-dark)' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--onix-dark)', cursor: 'auto' }}>
 
       {/* ── Mobile overlay ── */}
       {sidebarOpen && (

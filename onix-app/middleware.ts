@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const PROTECTED = ['/dashboard', '/pipeline'];
+const PROTECTED = ['/dashboard', '/pipeline', '/investors', '/outreach', '/copilot', '/workspace', '/profile', '/onboarding'];
 const PUBLIC_AUTH = ['/login', '/register'];
 
 export async function middleware(req: NextRequest) {
@@ -41,7 +41,8 @@ export async function middleware(req: NextRequest) {
   // Already logged in → skip /login and /register
   if (isPublicAuth && session) {
     const url = req.nextUrl.clone();
-    url.pathname = '/dashboard';
+    const onboarded = session.user?.user_metadata?.onboarding_complete;
+    url.pathname = onboarded ? '/dashboard' : '/onboarding';
     return NextResponse.redirect(url);
   }
 
@@ -49,5 +50,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/pipeline/:path*', '/login', '/register'],
+  matcher: [
+    '/dashboard/:path*', '/pipeline/:path*', '/investors/:path*',
+    '/outreach/:path*', '/copilot/:path*', '/workspace/:path*',
+    '/profile/:path*', '/onboarding/:path*', '/onboarding',
+    '/login', '/register',
+  ],
 };

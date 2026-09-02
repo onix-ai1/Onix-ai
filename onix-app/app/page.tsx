@@ -11,6 +11,12 @@ export default function LandingPage() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Mark body so landing.css custom cursor only applies here
+    document.body.classList.add('landing-page');
+    return () => document.body.classList.remove('landing-page');
+  }, []);
+
+  useEffect(() => {
     // Check session on mount
     const supabase = createClient();
     supabase.auth.getSession().then(({ data }) => {

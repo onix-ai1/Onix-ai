@@ -38,14 +38,32 @@ function AuthRefreshWatcher({ queryClient }: { queryClient: QueryClient }) {
   useEffect(() => {
     const supabase = createClient();
 
+    const PROTECTED_PREFIXES = [
+      '/dashboard', '/pipeline', '/investors', '/outreach',
+      '/copilot', '/workspace', '/profile', '/onboarding',
+    ];
+
+    function isProtected() {
+      return PROTECTED_PREFIXES.some(p => window.location.pathname.startsWith(p));
+    }
+
+    // Verify the user still exists on the server (catches deleted accounts)
+    // Only relevant when we're inside the app — not on public pages
+    supabase.auth.getUser().then(({ error }) => {
+      if (error && isProtected()) {
+        queryClient.clear();
+        supabase.auth.signOut();
+        router.push('/login');
+      }
+    });
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'TOKEN_REFRESHED') {
-        // Session silently refreshed — nothing to do
         console.debug('[auth] token refreshed');
       }
 
-      if (event === 'SIGNED_OUT' || (!session && event !== 'INITIAL_SESSION')) {
-        // Session expired and could not be refreshed — redirect to login
+      // Only force-redirect on protected pages — public pages are fine without a session
+      if ((event === 'SIGNED_OUT' || (!session && event !== 'INITIAL_SESSION')) && isProtected()) {
         queryClient.clear();
         router.push('/login');
       }
