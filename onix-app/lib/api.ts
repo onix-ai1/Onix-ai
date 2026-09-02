@@ -159,6 +159,47 @@ export async function advanceDeal(id: string): Promise<Deal> {
   return data;
 }
 
+/* ── Investment Readiness (dynamic, computed from deals) ── */
+
+function computeReadiness(deals: Deal[]) {
+  const active = deals.filter(d => d.status === 'active');
+  const total = active.length;
+
+  // Financial Docs: % of active deals that have a monetary value set
+  const withValue = active.filter(d => d.value && d.value > 0).length;
+  const financialDocs = total ? Math.round((withValue / total) * 100) : 0;
+
+  // Market Positioning: % of active deals in Match, Outreach, or Close stage
+  const marketStages = ['Match', 'Outreach', 'Close'];
+  const inMarket = active.filter(d => marketStages.includes(d.stage)).length;
+  const marketPositioning = total ? Math.round((inMarket / total) * 100) : 0;
+
+  // Legal Readiness: % of active deals in Outreach or Close stage
+  const legalStages = ['Outreach', 'Close'];
+  const inLegal = active.filter(d => legalStages.includes(d.stage)).length;
+  const legalReadiness = total ? Math.round((inLegal / total) * 100) : 0;
+
+  // Team & Operations: average fit score across active deals (proxy for team/ops quality)
+  const avgFit = total
+    ? Math.round(active.reduce((s, d) => s + (d.fit_score ?? 0), 0) / total)
+    : 0;
+
+  // Overall: weighted average
+  const overall = total
+    ? Math.round(financialDocs * 0.3 + marketPositioning * 0.25 + legalReadiness * 0.2 + avgFit * 0.25)
+    : 0;
+
+  return {
+    overall,
+    categories: [
+      { label: 'Financial Docs',     score: financialDocs },
+      { label: 'Market Positioning', score: marketPositioning },
+      { label: 'Legal Readiness',    score: legalReadiness },
+      { label: 'Team & Operations',  score: avgFit },
+    ],
+  };
+}
+
 /* ── Dashboard (computed from deals) ── */
 
 export async function fetchDashboard(): Promise<DashboardData> {
@@ -196,15 +237,7 @@ export async function fetchDashboard(): Promise<DashboardData> {
     },
     stages: stageCounts,
     recentDeals: allDeals.slice(0, 5),
-    readiness: {
-      overall: 74,
-      categories: [
-        { label: 'Financial Docs',     score: 82 },
-        { label: 'Market Positioning', score: 70 },
-        { label: 'Legal Readiness',    score: 65 },
-        { label: 'Team & Operations',  score: 78 },
-      ],
-    },
+    readiness: computeReadiness(allDeals),
     activity: allDeals.slice(0, 5).map(d => ({
       id: d.id,
       message: `Deal "${d.name}" is in ${d.stage} stage`,
@@ -381,5 +414,58 @@ export async function removeMember(memberId: string): Promise<void> {
 export async function deleteWorkspace(workspaceId: string): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.from('workspaces').delete().eq('id', workspaceId);
+  if (error) throw new Error(error.message);
+}
+
+/* ── Copilot Chats ── */
+
+export interface CopilotMessage {
+  id:      string;
+  role:    'user' | 'assistant';
+  content: string;
+}
+
+export interface CopilotChat {
+  id:         string;
+  user_id:    string;
+  title:      string;
+  messages:   CopilotMessage[];
+  created_at: string;
+  updated_at: string;
+}
+
+export async function fetchCopilotChats(): Promise<CopilotChat[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('copilot_chats')
+    .select('*')
+    .order('updated_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function createCopilotChat(title: string, messages: CopilotMessage[]): Promise<CopilotChat> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data, error } = await supabase
+    .from('copilot_chats')
+    .insert({ title, messages, user_id: user?.id })
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function updateCopilotChat(id: string, messages: CopilotMessage[], title?: string): Promise<void> {
+  const supabase = createClient();
+  const update: Record<string, unknown> = { messages, updated_at: new Date().toISOString() };
+  if (title) update.title = title;
+  const { error } = await supabase.from('copilot_chats').update(update).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteCopilotChat(id: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('copilot_chats').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }

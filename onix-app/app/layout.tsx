@@ -12,6 +12,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: 'ONIX AI — Deal Room',
   description: 'AI-Native M&A & Capital-Raising Platform',
+  icons: [],
 };
 
 export default function RootLayout({

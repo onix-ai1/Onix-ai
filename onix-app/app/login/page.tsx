@@ -21,10 +21,20 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await loginRequest({ email, password });
-      // First-time users go through onboarding; returning users go straight to dashboard
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      const onboarded = user?.user_metadata?.onboarding_complete;
+
+      // Check user metadata first, then profiles table as fallback
+      let onboarded = user?.user_metadata?.onboarding_complete;
+      if (!onboarded && user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('onboarding_complete')
+          .eq('id', user.id)
+          .single();
+        onboarded = profile?.onboarding_complete ?? false;
+      }
+
       router.push(onboarded ? '/dashboard' : '/onboarding');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed');

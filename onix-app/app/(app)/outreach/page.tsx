@@ -117,7 +117,7 @@ export default function OutreachPage() {
       </div>
 
       {/* ── Revenue projection chart ── */}
-      <RevenueChart outreachList={outreachList} />
+      <RevenueChartWrapper outreachList={outreachList} />
 
       {/* ── Search + Status filter ── */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -247,17 +247,49 @@ export default function OutreachPage() {
   );
 }
 
+/* ── Revenue Projection Chart wrapper (fetches deals) ── */
+function RevenueChartWrapper({ outreachList }: { outreachList: Outreach[] }) {
+  const { data: deals = [] } = useQuery({ queryKey: ['deals'], queryFn: fetchDeals });
+  return <RevenueChart outreachList={outreachList} deals={deals} />;
+}
+
 /* ── Revenue Projection Chart ── */
-function RevenueChart({ outreachList }: { outreachList: Outreach[] }) {
+const STAGE_PROBABILITY: Record<string, number> = {
+  Diagnose: 0.10,
+  Prepare:  0.20,
+  Match:    0.40,
+  Outreach: 0.65,
+  Close:    0.85,
+};
+
+function RevenueChart({ outreachList, deals }: { outreachList: Outreach[]; deals: Deal[] }) {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const now    = new Date();
+  const currentMonth = now.getMonth(); // 0-indexed
 
-  // Build projection: each month's cumulative deal value estimate from outreach
+  // Weighted pipeline value per active deal
+  const activePipeline = deals
+    .filter(d => d.status === 'active' && d.value)
+    .reduce((sum, d) => {
+      const prob = STAGE_PROBABILITY[d.stage] ?? 0.1;
+      return sum + (d.value ?? 0) * prob;
+    }, 0); // in raw currency units
+
+  // Convert to $M
+  const pipelineM = activePipeline / 1_000_000;
+
+  // Meeting-scheduled outreach boosts near-term months
+  const meetingBoost = outreachList.filter(o => o.status === 'meeting_scheduled').length * 0.15;
+  const repliedBoost = outreachList.filter(o => o.status === 'replied').length * 0.08;
+
+  // Build cumulative monthly projection starting from current month
   const data = months.map((_, i) => {
-    const base     = 1.2 + i * 0.4;
-    const pipeline = outreachList.filter(o => o.status === 'meeting_scheduled').length * 0.5;
-    const replied  = outreachList.filter(o => o.status === 'replied').length * 0.2;
-    return parseFloat((base + pipeline + replied + (Math.sin(i * 0.6) * 0.3)).toFixed(2));
+    if (deals.length === 0 && outreachList.length === 0) return 0;
+    const monthsAhead = i - currentMonth;
+    // Ramp up: earlier months get less, future months get more as deals close
+    const ramp = Math.max(0, 1 + monthsAhead * 0.08);
+    const value = (pipelineM + meetingBoost + repliedBoost) * ramp;
+    return parseFloat(value.toFixed(2));
   });
 
   const chartData = {

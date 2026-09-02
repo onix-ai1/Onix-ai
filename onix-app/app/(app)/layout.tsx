@@ -74,7 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <aside
         className={`
           fixed md:static inset-y-0 left-0 z-40
-          flex flex-col flex-shrink-0 overflow-y-auto
+          flex flex-col flex-shrink-0
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}
@@ -90,7 +90,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex flex-col gap-6 flex-1 px-3 py-5">
+        <nav className="flex flex-col gap-6 flex-1 overflow-y-auto px-3 py-5">
           {NAV_SECTIONS.map((section) => (
             <div key={section.label}>
               <p className="px-3 mb-2 text-xs font-semibold tracking-widest" style={{ color: 'var(--onix-muted)' }}>

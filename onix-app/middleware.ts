@@ -46,6 +46,16 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Already onboarded → skip /onboarding
+  if (pathname.startsWith('/onboarding') && session) {
+    const onboarded = session.user?.user_metadata?.onboarding_complete;
+    if (onboarded) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
+
   return res;
 }
 

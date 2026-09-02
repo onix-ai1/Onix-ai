@@ -68,15 +68,27 @@ export default function OnboardingPage() {
     try {
       const supabase = createClient();
 
-      // 1. Save workspace
-      if (company) {
-        await upsertWorkspace({ name: company, company, industry, website, size });
-      }
+      // 1. Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
 
-      // 2. Mark onboarding complete in user metadata
+      // 2. Save workspace (always save, use company name or fallback)
+      const workspaceName = company || user.user_metadata?.full_name || 'My Workspace';
+      await upsertWorkspace({ name: workspaceName, company, industry, website, size });
+
+      // 3. Mark onboarding complete in user metadata
       await supabase.auth.updateUser({
         data: { onboarding_complete: true, role, goals },
       });
+
+      // 4. Force session refresh so new JWT with onboarding_complete is stored in cookie
+      await supabase.auth.refreshSession();
+
+      // 5. Also store in profiles table as reliable fallback
+      await supabase
+        .from('profiles')
+        .update({ onboarding_complete: true })
+        .eq('id', user.id);
 
       setDone(true);
     } catch {
