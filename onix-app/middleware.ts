@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const PROTECTED = ['/dashboard', '/pipeline', '/investors', '/outreach', '/copilot', '/workspace', '/profile', '/onboarding'];
+const PROTECTED = ['/dashboard', '/pipeline', '/calculator', '/investors', '/outreach', '/listings', '/copilot', '/workspace', '/profile', '/onboarding'];
 const PUBLIC_AUTH = ['/login', '/register'];
 
 export async function middleware(req: NextRequest) {
@@ -61,9 +61,9 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard/:path*', '/pipeline/:path*', '/investors/:path*',
-    '/outreach/:path*', '/copilot/:path*', '/workspace/:path*',
-    '/profile/:path*', '/onboarding/:path*', '/onboarding',
+    '/dashboard/:path*', '/pipeline/:path*', '/calculator/:path*', '/investors/:path*',
+    '/outreach/:path*', '/listings/:path*', '/copilot/:path*',
+    '/workspace/:path*', '/profile/:path*', '/onboarding/:path*', '/onboarding',
     '/login', '/register',
   ],
 };

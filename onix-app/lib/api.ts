@@ -2,6 +2,23 @@ import { createClient } from './supabase/client';
 
 /* ── Types ── */
 
+export interface BusinessListing {
+  id: string;
+  user_id: string;
+  company_name: string;
+  sector: string;
+  location: string;
+  asking_price: string;
+  revenue: string;
+  ebitda: string;
+  description: string;
+  contact_email: string;
+  contact_phone: string;
+  status: 'active' | 'under_offer' | 'sold';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Workspace {
   id: string;
   owner_id: string;
@@ -467,5 +484,44 @@ export async function updateCopilotChat(id: string, messages: CopilotMessage[], 
 export async function deleteCopilotChat(id: string): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.from('copilot_chats').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+/* ── Business Listings ── */
+
+export async function fetchBusinessListings(): Promise<BusinessListing[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('business_listings')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+export async function createBusinessListing(payload: Partial<BusinessListing>): Promise<BusinessListing> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data, error } = await supabase
+    .from('business_listings')
+    .insert([{ ...payload, user_id: user?.id, status: 'active' }])
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function updateBusinessListingStatus(id: string, status: BusinessListing['status']): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from('business_listings')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteBusinessListing(id: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase.from('business_listings').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }
