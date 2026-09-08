@@ -272,9 +272,9 @@ export default function CopilotPage() {
             <SparkleIcon />
           </div>
           <div>
-            <h2 className="text-base font-semibold" style={{ color: 'var(--onix-text)' }}>AI Co-Pilot</h2>
+            <h2 className="text-base font-semibold" style={{ color: 'var(--onix-text)' }}>AI CFO</h2>
             <p className="text-xs" style={{ color: 'var(--onix-muted)' }}>
-              Powered by GPT-4o · {deals.length} deal{deals.length !== 1 ? 's' : ''} in context
+              {deals.length} deal{deals.length !== 1 ? 's' : ''} in context
             </p>
           </div>
         </div>

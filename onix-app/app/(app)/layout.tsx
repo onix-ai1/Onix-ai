@@ -14,7 +14,8 @@ const NAV_SECTIONS = [
     items: [
       { href: '/dashboard',   label: 'Dashboard',   icon: GridIcon,   count: null },
       { href: '/pipeline',    label: 'Pipeline',    icon: FunnelIcon, count: null },
-      { href: '/calculator',  label: 'Calculator',  icon: CalcIcon,   count: null },
+      { href: '/calculator',  label: 'Acq. Calculator', icon: CalcIcon,    count: null },
+      { href: '/valuation',   label: 'Valuation',       icon: ValuationIcon, count: null },
     ],
   },
   {
@@ -23,7 +24,7 @@ const NAV_SECTIONS = [
       { href: '/investors',  label: 'Investors',   icon: UsersIcon,    count: null },
       { href: '/outreach',   label: 'Outreach',    icon: MailIcon,     count: null },
       { href: '/listings',   label: 'Listings',    icon: ListingIcon,  count: null },
-      { href: '/copilot',    label: 'AI Co-Pilot', icon: SparkIcon,    count: null },
+      { href: '/copilot',    label: 'AI CFO',      icon: SparkIcon,    count: null },
     ],
   },
   {
@@ -268,6 +269,14 @@ function BuildingIcon({ size = 16 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
       <polyline points="9,22 9,12 15,12 15,22"/>
+    </svg>
+  );
+}
+function ValuationIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 6v6l4 2"/>
     </svg>
   );
 }

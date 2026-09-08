@@ -521,7 +521,7 @@ function StepReview({ name, role, company, goals }: {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-semibold" style={{ color: 'var(--onix-text)' }}>AI Co-Pilot is ready</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--onix-text)' }}>AI CFO is ready</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--onix-muted)' }}>
               GPT-4o powered advisor trained on M&A and capital markets — available from your sidebar.
             </p>
@@ -592,7 +592,7 @@ function DoneScreen({ name, onEnter }: { name: string; onEnter: () => void }) {
         Your deal room is personalised and ready.
       </p>
       <p className="text-sm max-w-sm mb-10" style={{ color: 'var(--onix-muted)' }}>
-        Manage your pipeline, track investors, and use AI Co-Pilot to accelerate every deal.
+        Manage your pipeline, track investors, and use AI CFO to accelerate every deal.
       </p>
 
       <button
