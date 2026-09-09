@@ -44,6 +44,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { theme, toggle }  = useTheme();
   const [initials, setInitials]       = useState('U');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDesktop, setIsDesktop]     = useState(true); // assume desktop for SSR
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -56,7 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Close sidebar on route change (mobile)
-  useEffect(() => { setSidebarOpen(false); }, [pathname]);
+  useEffect(() => { if (!isDesktop) setSidebarOpen(false); }, [pathname, isDesktop]);
 
   async function handleLogout() {
     await logoutRequest();
@@ -64,7 +72,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--onix-dark)', cursor: 'auto' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--onix-dark)', cursor: 'auto' }}>
 
       {/* ── Mobile overlay ── */}
       {sidebarOpen && (
@@ -77,25 +85,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* ── Sidebar ── */}
       <aside
-        className={`
-          fixed md:static inset-y-0 left-0 z-40
-          flex flex-col flex-shrink-0
-          transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        `}
         style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 40,
           width: '220px',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          flexShrink: 0,
           background: 'var(--onix-surface)',
           borderRight: '1px solid var(--onix-border)',
+          transform: (isDesktop || sidebarOpen) ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease-in-out',
         }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5" style={{ borderBottom: '1px solid var(--onix-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px', flexShrink: 0, borderBottom: '1px solid var(--onix-border)' }}>
           <Image src="/logo.png" alt="ONIX AI" width={80} height={28} style={{ objectFit: 'contain' }} />
         </div>
 
         {/* Nav */}
-        <nav className="flex flex-col gap-6 flex-1 min-h-0 overflow-y-auto px-3 py-5">
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: 24, flex: 1, minHeight: 0, overflowY: 'auto', padding: '20px 12px' }}>
           {NAV_SECTIONS.map((section) => (
             <div key={section.label}>
               <p className="px-3 mb-2 text-xs font-semibold tracking-widest" style={{ color: 'var(--onix-muted)' }}>
@@ -138,8 +150,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        {/* Logout — sticky to bottom so it never jumps during hydration */}
-        <div className="px-3 py-4 sticky bottom-0" style={{ borderTop: '1px solid var(--onix-border)', background: 'var(--onix-surface)' }}>
+        {/* Logout — always pinned to bottom */}
+        <div style={{ padding: '16px 12px', flexShrink: 0, borderTop: '1px solid var(--onix-border)', background: 'var(--onix-surface)' }}>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all"
@@ -152,12 +164,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* ── Main ── */}
-      <div className="flex flex-col flex-1 overflow-hidden min-w-0">
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden', marginLeft: isDesktop ? '220px' : '0' }}>
 
         {/* Topbar */}
         <header
-          className="flex items-center justify-between px-4 md:px-6 py-4 flex-shrink-0"
           style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '0 24px', flexShrink: 0,
             background:   'var(--onix-surface)',
             borderBottom: '1px solid var(--onix-border)',
             height:       '64px',
@@ -186,6 +199,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
+            {/* Support */}
+            <a
+              href="mailto:Robinkmr12@gmail.com?subject=ONIX AI Support"
+              title="Contact Support"
+              className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+              style={{ background: 'var(--onix-card)', border: '1px solid var(--onix-border)', color: 'var(--onix-muted)' }}
+            >
+              <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </a>
+
             {/* Theme toggle */}
             <button
               onClick={toggle}
@@ -210,7 +236,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
           {children}
         </main>
       </div>

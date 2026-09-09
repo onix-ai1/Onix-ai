@@ -138,24 +138,15 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="hero-stats">
-          <div className="stat-item"><div className="stat-num" data-t="10000" data-s="+">10000+</div><div className="stat-lbl">Active Listings</div></div>
-          <div className="stat-item"><div className="stat-num">$2.8B</div><div className="stat-lbl">Deal Flow Processed</div></div>
-          <div className="stat-item"><div className="stat-num" data-t="120" data-s="">120</div><div className="stat-lbl">Countries Served</div></div>
-          <div className="stat-item"><div className="stat-num" data-t="94" data-s="%">94%</div><div className="stat-lbl">Valuation Accuracy</div></div>
+          <div className="stat-item"><div className="stat-num" data-t="150" data-s="+">150+</div><div className="stat-lbl">Businesses Analyzed</div></div>
+          <div className="stat-item"><div className="stat-num" data-t="50" data-s="+">50+</div><div className="stat-lbl">Buyers &amp; Investors</div></div>
+          <div className="stat-item"><div className="stat-num">₹10Cr+</div><div className="stat-lbl">Businesses Evaluated</div></div>
+          <div className="stat-item"><div className="stat-num" data-t="15" data-s="+">15+</div><div className="stat-lbl">Countries</div></div>
         </div>
       </section>
 
       <Ornament />
 
-      {/* TRUST */}
-      <div className="trust">
-        <div className="trust-lbl">Trusted by dealmakers across leading institutions</div>
-        <div className="trust-logos">
-          {['Goldman','Sequoia','Temasek','SoftBank','Apex Capital','KPMG'].map((l) => (
-            <div key={l} className="tlg">{l}</div>
-          ))}
-        </div>
-      </div>
 
       <Ornament />
 
@@ -329,9 +320,11 @@ export default function LandingPage() {
             </a>
             <p className="footer-tag">The world&apos;s most intelligent marketplace for buying, selling, and valuing businesses globally.</p>
             <div className="footer-social">
-              <a href="#" className="fsoc">in</a>
-              <a href="#" className="fsoc">X</a>
-              <a href="#" className="fsoc">yt</a>
+              <a href="https://www.instagram.com/onix_investment_bank" target="_blank" rel="noopener noreferrer" className="fsoc" title="Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
             </div>
           </div>
           <div><div className="fc-title">Platform</div><div className="footer-links"><a href="#">Browse Listings</a><a href="#">List a Business</a><a href="#">AI Valuation</a><a href="#">Data Room</a></div></div>
