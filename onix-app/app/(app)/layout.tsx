@@ -12,16 +12,18 @@ const NAV_SECTIONS = [
   {
     label: 'DEAL ROOM',
     items: [
-      { href: '/dashboard',   label: 'Dashboard',   icon: GridIcon,   count: null },
-      { href: '/pipeline',    label: 'Pipeline',    icon: FunnelIcon, count: null },
-      { href: '/calculator',  label: 'Acq. Calculator', icon: CalcIcon,    count: null },
-      { href: '/valuation',   label: 'Valuation',       icon: ValuationIcon, count: null },
+      { href: '/dashboard',   label: 'Dashboard',        icon: GridIcon,       count: null },
+      { href: '/pipeline',    label: 'Pipeline',         icon: FunnelIcon,     count: null },
+      { href: '/deal-room',   label: 'Deal Room',        icon: DealRoomIcon,   count: null },
+      { href: '/calculator',  label: 'Acq. Calculator',  icon: CalcIcon,       count: null },
+      { href: '/valuation',   label: 'Valuation',        icon: ValuationIcon,  count: null },
     ],
   },
   {
     label: 'NETWORK',
     items: [
       { href: '/investors',  label: 'Investors',   icon: UsersIcon,    count: null },
+      { href: '/matching',   label: 'Matching',    icon: MatchIcon,    count: null },
       { href: '/outreach',   label: 'Outreach',    icon: MailIcon,     count: null },
       { href: '/listings',   label: 'Listings',    icon: ListingIcon,  count: null },
       { href: '/copilot',    label: 'AI CFO',      icon: SparkIcon,    count: null },
@@ -269,6 +271,22 @@ function BuildingIcon({ size = 16 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
       <polyline points="9,22 9,12 15,12 15,22"/>
+    </svg>
+  );
+}
+function DealRoomIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <rect x="9" y="13" width="6" height="8"/>
+    </svg>
+  );
+}
+function MatchIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <circle cx="9" cy="12" r="4"/><circle cx="15" cy="12" r="4"/>
+      <path d="M9 8V4M15 8V4M9 16v4M15 16v4"/>
     </svg>
   );
 }
