@@ -310,6 +310,19 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── M&A NEWS ── */}
+      <section className="news-section reveal">
+        <div className="news-hd">
+          <div>
+            <div className="sec-label">LIVE INTELLIGENCE</div>
+            <h2 className="sec-title">Latest M&amp;A News</h2>
+            <p className="sec-sub">Real-time deal intelligence from 150,000+ global sources</p>
+          </div>
+          <a href="/news" className="btn-o news-view-all">View All News →</a>
+        </div>
+        <LandingNews />
+      </section>
+
       {/* FOOTER */}
       <footer>
         <div className="footer-grid">
@@ -339,6 +352,65 @@ export default function LandingPage() {
 
       <Script src="/script.js" strategy="afterInteractive" />
     </>
+  );
+}
+
+function LandingNews() {
+  const [articles, setArticles] = useState<Array<{
+    title: string; description: string; url: string;
+    urlToImage: string | null; publishedAt: string;
+    source: { name: string };
+  }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/news?category=all&page=1')
+      .then(r => r.json())
+      .then(d => { setArticles((d.articles || []).slice(0, 6)); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  function timeAgo(iso: string) {
+    const diff = Date.now() - new Date(iso).getTime();
+    const h = Math.floor(diff / 3600000);
+    if (h < 1) return `${Math.floor(diff / 60000)}m ago`;
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  }
+
+  if (loading) return (
+    <div className="news-grid">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="news-card-skeleton" />
+      ))}
+    </div>
+  );
+
+  if (!articles.length) return null;
+
+  return (
+    <div className="news-grid">
+      {articles.filter(a => a.title !== '[Removed]').map((a, i) => (
+        <a key={i} href={a.url} target="_blank" rel="noopener noreferrer" className="news-card">
+          {a.urlToImage && (
+            <div className="news-card-img-wrap">
+              <img src={a.urlToImage} alt="" className="news-card-img"
+                onError={e => { (e.target as HTMLImageElement).parentElement!.style.display = 'none'; }} />
+            </div>
+          )}
+          <div className="news-card-body">
+            <div className="news-card-meta">
+              <span className="news-source">{a.source.name}</span>
+              <span className="news-time">{timeAgo(a.publishedAt)}</span>
+            </div>
+            <h3 className="news-card-title">{a.title}</h3>
+            {a.description && <p className="news-card-desc">{a.description}</p>}
+            <span className="news-read-more">Read article →</span>
+          </div>
+        </a>
+      ))}
+    </div>
   );
 }
 
