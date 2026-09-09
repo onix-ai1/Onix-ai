@@ -50,9 +50,9 @@ body::before { content:''; position:fixed; inset:0; background-image:url("data:i
 .ti svg { width:8px; height:8px; opacity:0.4; }
 @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-/* ── NAV ── */
-nav { position:fixed; top:28px; left:0; right:0; z-index:900; display:flex; align-items:center; justify-content:space-between; padding:0 56px; height:72px; background:rgba(6,6,6,0.7); backdrop-filter:blur(40px) saturate(160%); border-bottom:1px solid rgba(196,160,82,0.1); transition:all .5s var(--ease); }
-nav.scrolled { height:62px; background:rgba(6,6,6,0.95); border-bottom-color:rgba(196,160,82,0.2); }
+/* ── NAV (scoped to landing page only) ── */
+.landing-page nav { position:fixed; top:28px; left:0; right:0; z-index:900; display:flex; align-items:center; justify-content:space-between; padding:0 56px; height:72px; background:rgba(6,6,6,0.7); backdrop-filter:blur(40px) saturate(160%); border-bottom:1px solid rgba(196,160,82,0.1); transition:all .5s var(--ease); }
+.landing-page nav.scrolled { height:62px; background:rgba(6,6,6,0.95); border-bottom-color:rgba(196,160,82,0.2); }
 
 /* Logo with real brand mark */
 .nav-logo { display:flex; align-items:center; gap:14px; text-decoration:none; }

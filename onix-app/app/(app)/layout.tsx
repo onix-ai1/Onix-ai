@@ -110,8 +110,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Nav */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: 24, flex: 1, minHeight: 0, overflowY: 'auto', padding: '20px 12px' }}>
           {NAV_SECTIONS.map((section) => (
-            <div key={section.label}>
-              <p className="px-3 mb-2 text-xs font-semibold tracking-widest" style={{ color: 'var(--onix-muted)' }}>
+            <div key={section.label} style={{ display: 'flex', flexDirection: 'column' }}>
+              <p style={{ padding: '0 12px', marginBottom: 8, marginTop: 0, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--onix-muted)' }}>
                 {section.label}
               </p>
               {section.items.map((item) => {
@@ -121,26 +121,27 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg mb-0.5 text-sm font-medium transition-all"
                     style={{
-                      color:          active ? 'var(--onix-gold)' : disabled ? 'var(--onix-border)' : 'var(--onix-muted)',
-                      background:     active ? 'rgba(201,168,76,0.1)' : 'transparent',
-                      cursor:         disabled ? 'not-allowed' : 'pointer',
-                      pointerEvents:  disabled ? 'none' : 'auto',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      gap: 8, padding: '8px 12px', borderRadius: 8, marginBottom: 2,
+                      fontSize: 14, fontWeight: 500, textDecoration: 'none',
+                      color:         active ? 'var(--onix-gold)' : disabled ? 'var(--onix-border)' : 'var(--onix-muted)',
+                      background:    active ? 'rgba(201,168,76,0.1)' : 'transparent',
+                      cursor:        disabled ? 'not-allowed' : 'pointer',
+                      pointerEvents: disabled ? 'none' : 'auto',
+                      transition:    'background 0.15s, color 0.15s',
                     }}
                   >
-                    <span className="flex items-center gap-2.5">
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <item.icon size={16} />
                       {item.label}
                     </span>
                     {item.count !== null && (
-                      <span
-                        className="text-xs px-1.5 py-0.5 rounded"
-                        style={{
-                          background: active ? 'rgba(201,168,76,0.2)' : 'var(--onix-card)',
-                          color:      active ? 'var(--onix-gold)' : 'var(--onix-muted)',
-                        }}
-                      >
+                      <span style={{
+                        fontSize: 11, padding: '2px 6px', borderRadius: 4,
+                        background: active ? 'rgba(201,168,76,0.2)' : 'var(--onix-card)',
+                        color:      active ? 'var(--onix-gold)' : 'var(--onix-muted)',
+                      }}>
                         {item.count}
                       </span>
                     )}
@@ -151,7 +152,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        {/* Logout — always pinned to bottom */}
+        {/* Sign out — pinned to bottom */}
+        <div style={{ padding: '12px', flexShrink: 0, borderTop: '1px solid var(--onix-border)' }}>
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+              padding: '8px 12px', borderRadius: 8, fontSize: 14, fontWeight: 500,
+              color: 'var(--onix-muted)', background: 'transparent', border: 'none',
+              cursor: 'pointer', transition: 'color 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
+          >
+            <LogoutIcon size={16} />
+            Sign out
+          </button>
+        </div>
       </aside>
 
       {/* ── Main ── */}
