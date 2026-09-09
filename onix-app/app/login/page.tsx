@@ -24,20 +24,32 @@ export default function LoginPage() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Check user metadata first, then profiles table as fallback
+      // Check metadata first (fastest)
       let onboarded = user?.user_metadata?.onboarding_complete;
+
+      // Only query profiles if not already confirmed — with 3s timeout
       if (!onboarded && user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('onboarding_complete')
-          .eq('id', user.id)
-          .single();
-        onboarded = profile?.onboarding_complete ?? false;
+        try {
+          const profilePromise = supabase
+            .from('profiles')
+            .select('onboarding_complete')
+            .eq('id', user.id)
+            .maybeSingle();
+          const timeoutPromise = new Promise<null>(resolve => setTimeout(() => resolve(null), 3000));
+          const result = await Promise.race([profilePromise, timeoutPromise]);
+          if (result && 'data' in result) {
+            onboarded = result.data?.onboarding_complete ?? false;
+          }
+        } catch {
+          // Profile lookup failed — default to onboarding
+          onboarded = false;
+        }
       }
 
       router.push(onboarded ? '/dashboard' : '/onboarding');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      const msg = err instanceof Error ? err.message : 'Login failed';
+      setError(msg.includes('Invalid login') ? 'Invalid email or password' : msg);
     } finally {
       setLoading(false);
     }

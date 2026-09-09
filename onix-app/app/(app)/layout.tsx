@@ -152,16 +152,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Logout — always pinned to bottom */}
-        <div style={{ padding: '16px 12px', flexShrink: 0, borderTop: '1px solid var(--onix-border)', background: 'var(--onix-surface)' }}>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all"
-            style={{ color: 'var(--onix-muted)' }}
-          >
-            <LogoutIcon size={16} />
-            Sign out
-          </button>
-        </div>
       </aside>
 
       {/* ── Main ── */}
@@ -200,6 +190,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
+            {/* Consult M&A Advisor */}
+            <a
+              href="mailto:Robinkmr12@gmail.com?subject=M%26A Advisor Consultation&body=Hi%2C%20I%20would%20like%20to%20consult%20an%20M%26A%20advisor."
+              title="Consult M&A Advisor"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '6px 12px', borderRadius: 8, textDecoration: 'none',
+                fontSize: 12, fontWeight: 600,
+                background: 'linear-gradient(135deg,#C9A84C,#E8C96A)',
+                color: '#0D0D0D', whiteSpace: 'nowrap',
+              }}
+            >
+              <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Consult M&amp;A Advisor
+            </a>
+
             {/* Support */}
             <a
               href="mailto:Robinkmr12@gmail.com?subject=ONIX AI Support"
@@ -223,16 +233,49 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {theme === 'dark' ? <SunIcon size={15} /> : <MoonIcon size={15} />}
             </button>
 
-            {/* Avatar */}
-            <Link href="/profile">
+            {/* Avatar with dropdown */}
+            <div style={{ position: 'relative' }} className="group">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer transition-opacity hover:opacity-80"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold cursor-pointer"
                 style={{ background: 'var(--onix-gold)', color: '#0D0D0D' }}
-                title="View profile"
               >
                 {initials}
               </div>
-            </Link>
+              {/* Dropdown — visible on hover */}
+              <div
+                className="group-hover:opacity-100 group-hover:pointer-events-auto"
+                style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                  minWidth: 160, borderRadius: 10, overflow: 'hidden',
+                  background: 'var(--onix-surface)', border: '1px solid var(--onix-border)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                  opacity: 0, pointerEvents: 'none',
+                  transition: 'opacity 0.15s',
+                  zIndex: 100,
+                }}
+              >
+                <div style={{ padding: '10px 14px 8px', borderBottom: '1px solid var(--onix-border)' }}>
+                  <p style={{ fontSize: 11, color: 'var(--onix-muted)', margin: 0 }}>Signed in as</p>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--onix-text)', margin: '2px 0 0' }}>{initials}</p>
+                </div>
+                <Link
+                  href="/profile"
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', fontSize: 13, color: 'var(--onix-muted)', textDecoration: 'none' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--onix-card)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <PersonIcon size={14} /> Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', fontSize: 13, color: '#ef4444', background: 'transparent', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.08)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <LogoutIcon size={14} /> Sign out
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
