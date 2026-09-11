@@ -45,7 +45,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { theme, toggle }  = useTheme();
   const [initials, setInitials]       = useState('U');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDesktop, setIsDesktop]     = useState(true); // assume desktop for SSR
+  const [isDesktop, setIsDesktop]     = useState(true);
+  const [lpModal, setLpModal]         = useState(false);
+  const [lpForm, setLpForm]           = useState({ name: '', email: '', phone: '', company: '', ticket: '', message: '' });
+  const [lpLoading, setLpLoading]     = useState(false);
+  const [lpSuccess, setLpSuccess]     = useState(false);
 
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
@@ -70,6 +74,39 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   async function handleLogout() {
     await logoutRequest();
     router.push('/login');
+  }
+
+  function openWhatsApp(service: string) {
+    const msg = encodeURIComponent(`Hi, I am interested in ONIX AI's ${service} service. Please guide me further.`);
+    window.open(`https://wa.me/919940349156?text=${msg}`, '_blank');
+  }
+
+  async function handleLpSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLpLoading(true);
+    try {
+      const supabase = createClient();
+      await supabase.from('lp_applications').insert({
+        full_name:     lpForm.name,
+        email:         lpForm.email,
+        phone:         lpForm.phone,
+        company:       lpForm.company,
+        ticket_size:   lpForm.ticket,
+        message:       lpForm.message,
+        created_at:    new Date().toISOString(),
+      });
+      setLpSuccess(true);
+      // Also ping Robin on WhatsApp
+      const msg = encodeURIComponent(`New LP Application from ${lpForm.name} (${lpForm.email}, ${lpForm.phone}). Ticket: ${lpForm.ticket}. Company: ${lpForm.company}. Message: ${lpForm.message}`);
+      window.open(`https://wa.me/919940349156?text=${msg}`, '_blank');
+    } catch {
+      // Even if DB insert fails, still open WhatsApp
+      const msg = encodeURIComponent(`New LP Application from ${lpForm.name} (${lpForm.email}). Ticket: ${lpForm.ticket}.`);
+      window.open(`https://wa.me/919940349156?text=${msg}`, '_blank');
+      setLpSuccess(true);
+    } finally {
+      setLpLoading(false);
+    }
   }
 
   return (
@@ -151,6 +188,35 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           ))}
         </nav>
+
+        {/* Services section */}
+        <div style={{ padding: '12px 12px 0', borderTop: '1px solid var(--onix-border)', flexShrink: 0 }}>
+          <p style={{ padding: '8px 12px 6px', margin: 0, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--onix-muted)' }}>
+            SERVICES
+          </p>
+          {[
+            { label: 'Investment Banking',    icon: BankIcon },
+            { label: 'Wealth Management',     icon: WealthIcon },
+            { label: 'Financial Advisory',    icon: AdvisoryIcon },
+            { label: 'Capital Markets',       icon: CapitalIcon },
+          ].map(svc => (
+            <button key={svc.label} onClick={() => openWhatsApp(svc.label)}
+              style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px', borderRadius: 8, marginBottom: 2, fontSize: 13, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--onix-gold)'; e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
+            >
+              <svc.icon size={15} />
+              {svc.label}
+            </button>
+          ))}
+          {/* Asset Management — opens LP form */}
+          <button onClick={() => { setLpModal(true); setLpSuccess(false); setLpForm({ name: '', email: '', phone: '', company: '', ticket: '', message: '' }); }}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px', borderRadius: 8, marginBottom: 2, fontSize: 13, fontWeight: 500, color: 'var(--onix-gold)', background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.15)', cursor: 'pointer', textAlign: 'left' }}
+          >
+            <PrivateEqIcon size={15} />
+            <span style={{ lineHeight: 1.3 }}>Asset Management<br /><span style={{ fontSize: 10, fontWeight: 400, color: 'var(--onix-muted)' }}>Private Equity · Join as LP</span></span>
+          </button>
+        </div>
 
         {/* Sign out — pinned to bottom */}
         <div style={{ padding: '12px', flexShrink: 0, borderTop: '1px solid var(--onix-border)' }}>
@@ -301,8 +367,83 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+
+      {/* ── LP Application Modal ── */}
+      {lpModal && (
+        <div onClick={() => setLpModal(false)} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 480, borderRadius: 16, background: 'var(--onix-surface)', border: '1px solid var(--onix-border)', padding: 32, display: 'flex', flexDirection: 'column', gap: 20, maxHeight: '90vh', overflowY: 'auto' }}>
+
+            {lpSuccess ? (
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
+                <h3 style={{ color: 'var(--onix-text)', margin: '0 0 8px', fontSize: 18, fontWeight: 700 }}>Application Submitted!</h3>
+                <p style={{ color: 'var(--onix-muted)', fontSize: 14, margin: '0 0 20px' }}>Robin will reach out to you on WhatsApp shortly.</p>
+                <button onClick={() => setLpModal(false)} style={{ padding: '10px 28px', borderRadius: 8, background: 'var(--onix-gold)', color: '#0D0D0D', fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer' }}>Close</button>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <h3 style={{ color: 'var(--onix-gold)', margin: '0 0 4px', fontSize: 17, fontWeight: 700 }}>Asset Management · Private Equity</h3>
+                  <p style={{ color: 'var(--onix-muted)', fontSize: 13, margin: 0 }}>Join as a Limited Partner — fill your details and we'll connect you directly.</p>
+                </div>
+
+                <form onSubmit={handleLpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {[
+                    { key: 'name',    label: 'Full Name *',              placeholder: 'John Doe',          type: 'text',  required: true },
+                    { key: 'email',   label: 'Email *',                  placeholder: 'you@example.com',   type: 'email', required: true },
+                    { key: 'phone',   label: 'Phone / WhatsApp *',       placeholder: '+91 98765 43210',   type: 'tel',   required: true },
+                    { key: 'company', label: 'Company / Organisation',   placeholder: 'Acme Pvt Ltd',      type: 'text',  required: false },
+                    { key: 'ticket',  label: 'Investment Ticket Size *', placeholder: '₹1Cr – ₹5Cr',      type: 'text',  required: true },
+                  ].map(f => (
+                    <div key={f.key} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--onix-muted)' }}>{f.label}</label>
+                      <input
+                        type={f.type} required={f.required} placeholder={f.placeholder}
+                        value={lpForm[f.key as keyof typeof lpForm]}
+                        onChange={e => setLpForm(p => ({ ...p, [f.key]: e.target.value }))}
+                        style={{ padding: '10px 12px', borderRadius: 8, fontSize: 14, background: 'var(--onix-card)', border: '1px solid var(--onix-border)', color: 'var(--onix-text)', outline: 'none' }}
+                      />
+                    </div>
+                  ))}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--onix-muted)' }}>Message / Investment Goal</label>
+                    <textarea rows={3} placeholder="Tell us about your investment objectives…"
+                      value={lpForm.message}
+                      onChange={e => setLpForm(p => ({ ...p, message: e.target.value }))}
+                      style={{ padding: '10px 12px', borderRadius: 8, fontSize: 14, background: 'var(--onix-card)', border: '1px solid var(--onix-border)', color: 'var(--onix-text)', outline: 'none', resize: 'vertical' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                    <button type="button" onClick={() => setLpModal(false)} style={{ flex: 1, padding: '11px', borderRadius: 8, background: 'var(--onix-card)', border: '1px solid var(--onix-border)', color: 'var(--onix-muted)', fontSize: 14, cursor: 'pointer' }}>Cancel</button>
+                    <button type="submit" disabled={lpLoading} style={{ flex: 2, padding: '11px', borderRadius: 8, background: 'linear-gradient(135deg,#C9A84C,#E8C96A)', color: '#0D0D0D', fontWeight: 700, fontSize: 14, border: 'none', cursor: lpLoading ? 'not-allowed' : 'pointer', opacity: lpLoading ? 0.7 : 1 }}>
+                      {lpLoading ? 'Submitting…' : '🚀 Submit & Connect on WhatsApp'}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
+}
+
+/* ── Service icons ── */
+function BankIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M3 22v-9m18 9V13M12 2 2 7h20L12 2zM3 13h18v-2H3v2z"/><line x1="12" y1="13" x2="12" y2="22"/><line x1="7" y1="13" x2="7" y2="22"/><line x1="17" y1="13" x2="17" y2="22"/></svg>;
+}
+function WealthIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>;
+}
+function AdvisoryIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>;
+}
+function CapitalIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>;
+}
+function PrivateEqIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>;
 }
 
 /* ── Inline SVG icons ── */
