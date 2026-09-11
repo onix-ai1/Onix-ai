@@ -187,36 +187,35 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               })}
             </div>
           ))}
-        </nav>
 
-        {/* Services section */}
-        <div style={{ padding: '12px 12px 0', borderTop: '1px solid var(--onix-border)', flexShrink: 0 }}>
-          <p style={{ padding: '8px 12px 6px', margin: 0, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--onix-muted)' }}>
-            SERVICES
-          </p>
-          {[
-            { label: 'Investment Banking',    icon: BankIcon },
-            { label: 'Wealth Management',     icon: WealthIcon },
-            { label: 'Financial Advisory',    icon: AdvisoryIcon },
-            { label: 'Capital Markets',       icon: CapitalIcon },
-          ].map(svc => (
-            <button key={svc.label} onClick={() => openWhatsApp(svc.label)}
-              style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px', borderRadius: 8, marginBottom: 2, fontSize: 13, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--onix-gold)'; e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
+          {/* Services — inside nav, scrolls with everything else */}
+          <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 8, borderTop: '1px solid var(--onix-border)', marginTop: 8 }}>
+            <p style={{ padding: '0 12px 6px', margin: 0, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--onix-muted)' }}>
+              SERVICES
+            </p>
+            {[
+              { label: 'Investment Banking',    icon: BankIcon },
+              { label: 'Wealth Management',     icon: WealthIcon },
+              { label: 'Financial Advisory',    icon: AdvisoryIcon },
+              { label: 'Capital Markets',       icon: CapitalIcon },
+            ].map(svc => (
+              <button key={svc.label} onClick={() => openWhatsApp(svc.label)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 2, fontSize: 14, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--onix-gold)'; e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
+              >
+                <svc.icon size={16} />
+                {svc.label}
+              </button>
+            ))}
+            <button onClick={() => { setLpModal(true); setLpSuccess(false); setLpForm({ name: '', email: '', phone: '', company: '', ticket: '', message: '' }); }}
+              style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 2, fontSize: 14, fontWeight: 500, color: 'var(--onix-gold)', background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.15)', cursor: 'pointer', textAlign: 'left' }}
             >
-              <svc.icon size={15} />
-              {svc.label}
+              <PrivateEqIcon size={16} />
+              <span style={{ lineHeight: 1.3 }}>Asset Management<br /><span style={{ fontSize: 10, fontWeight: 400, color: 'var(--onix-muted)' }}>Private Equity · Join as LP</span></span>
             </button>
-          ))}
-          {/* Asset Management — opens LP form */}
-          <button onClick={() => { setLpModal(true); setLpSuccess(false); setLpForm({ name: '', email: '', phone: '', company: '', ticket: '', message: '' }); }}
-            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '7px 12px', borderRadius: 8, marginBottom: 2, fontSize: 13, fontWeight: 500, color: 'var(--onix-gold)', background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.15)', cursor: 'pointer', textAlign: 'left' }}
-          >
-            <PrivateEqIcon size={15} />
-            <span style={{ lineHeight: 1.3 }}>Asset Management<br /><span style={{ fontSize: 10, fontWeight: 400, color: 'var(--onix-muted)' }}>Private Equity · Join as LP</span></span>
-          </button>
-        </div>
+          </div>
+        </nav>
 
         {/* Sign out — pinned to bottom */}
         <div style={{ padding: '12px', flexShrink: 0, borderTop: '1px solid var(--onix-border)' }}>
