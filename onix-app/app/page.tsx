@@ -47,8 +47,8 @@ export default function LandingPage() {
       {/* Ticker */}
       <div className="ticker">
         <div className="ticker-track" id="ticker">
-          {['4,200+ Active Listings','$2.8B Deal Flow','68 Countries','94% Valuation Accuracy','Avg. Close: 47 Days','12,000+ Members','New: Dubai Skincare — $9.5M',
-            '4,200+ Active Listings','$2.8B Deal Flow','68 Countries','94% Valuation Accuracy','Avg. Close: 47 Days','12,000+ Members','New: Dubai Skincare — $9.5M'].map((t, i) => (
+          {['100+ Active Listings','15+ Countries','94% Valuation Accuracy','Avg. Close: 47 Days','100+ Members',
+            '100+ Active Listings','15+ Countries','94% Valuation Accuracy','Avg. Close: 47 Days','100+ Members'].map((t, i) => (
             <div key={i} className="ti">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               {t}
@@ -109,7 +109,7 @@ export default function LandingPage() {
         <div className="cr cr-bl" /><div className="cr cr-br" />
         <div className="side-line l" /><div className="side-line r" />
         <div className="hero-inner">
-          <div className="live-badge"><div className="live-dot" />Live Marketplace — 4,200+ Deals Active</div>
+          <div className="live-badge"><div className="live-dot" />Live Marketplace — 100+ Deals Active</div>
           <div className="hero-logo-wrap">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" className="hero-logo-svg" alt="ONIX AI Logo" style={{width:320,maxWidth:'80vw',height:'auto',opacity:0.95,display:'block',margin:'0 auto'}} />

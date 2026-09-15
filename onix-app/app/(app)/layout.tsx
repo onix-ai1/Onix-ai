@@ -17,6 +17,7 @@ const NAV_SECTIONS = [
       { href: '/deal-room',   label: 'Deal Room',        icon: DealRoomIcon,   count: null },
       { href: '/calculator',  label: 'Acq. Calculator',  icon: CalcIcon,       count: null },
       { href: '/valuation',   label: 'Valuation',        icon: ValuationIcon,  count: null },
+      { href: '/debt-engine', label: 'Debt Engine',      icon: DebtIcon,       count: null },
     ],
   },
   {
@@ -197,7 +198,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               { label: 'Investment Banking',    icon: BankIcon },
               { label: 'Wealth Management',     icon: WealthIcon },
               { label: 'Financial Advisory',    icon: AdvisoryIcon },
-              { label: 'Capital Markets',       icon: CapitalIcon },
+              { label: 'Capital Markets / Algo', icon: CapitalIcon },
             ].map(svc => (
               <button key={svc.label} onClick={() => openWhatsApp(svc.label)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 2, fontSize: 14, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
@@ -530,6 +531,16 @@ function ValuationIcon({ size = 16 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
       <circle cx="12" cy="12" r="10"/>
       <path d="M12 6v6l4 2"/>
+    </svg>
+  );
+}
+function DebtIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+      <line x1="12" y1="12" x2="12" y2="16"/>
+      <line x1="10" y1="14" x2="14" y2="14"/>
     </svg>
   );
 }
