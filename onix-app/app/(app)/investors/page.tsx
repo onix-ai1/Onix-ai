@@ -232,15 +232,15 @@ function InvestorCard({ investor: inv, onDelete }: { investor: Investor; onDelet
 
       {/* Actions */}
       <div className="flex items-center gap-2 pt-1" style={{ borderTop: '1px solid var(--onix-border)' }}>
-        {inv.contact_email && (
-          <a
-            href={`mailto:${inv.contact_email}`}
-            className="flex-1 text-center text-xs py-1.5 rounded-lg transition-all"
-            style={{ background: 'var(--onix-surface)', color: 'var(--onix-gold)', border: '1px solid var(--onix-border)' }}
-          >
-            Contact
-          </a>
-        )}
+        <a
+          href={`https://wa.me/919940349156?text=${encodeURIComponent(`Hi Robin, I'd like to connect with ${inv.name}${inv.firm ? ` from ${inv.firm}` : ''} through ONIX. Please facilitate the introduction.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 text-center text-xs py-1.5 rounded-lg transition-all"
+          style={{ background: 'var(--onix-surface)', color: 'var(--onix-gold)', border: '1px solid var(--onix-border)' }}
+        >
+          Contact via ONIX
+        </a>
         {inv.website && (
           <a
             href={`https://${inv.website}`}
