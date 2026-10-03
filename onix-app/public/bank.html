@@ -1,0 +1,820 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ONIX Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: clean white retail-bank page. Giant bold headlines, black pill buttons, pastel product panels holding phone mockups, tab switchers inside panels. */
+:root{--bg:#ffffff;--fg:#191c1f;--mute:#6b6f76;--surf:#f4f5f7;--surf2:#e9ebee;--line:#e3e5e9;--acc:#4b3bff;--accfg:#ffffff;--btn:#191c1f;--btnfg:#ffffff;--p1:#e9e5ff;--p2:#ffe7dc;--p3:#dcf3e8;--p4:#dde9fd;--pos:#0e8a6a;--neg:#c9362a;--phb:#191c1f;--shadow:0 30px 60px -28px rgba(25,28,31,.35);
+--disp:'Inter Tight','Inter',ui-sans-serif,system-ui,sans-serif;--body:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0c0e;--fg:#f2f3f5;--mute:#9ba0a8;--surf:#15171a;--surf2:#1e2125;--line:#2a2e33;--acc:#8b7dff;--accfg:#0b0c0e;--btn:#f2f3f5;--btnfg:#0b0c0e;--p1:#1d1846;--p2:#3a231b;--p3:#12332b;--p4:#142744;--pos:#5fd6b4;--neg:#ff8a7a;--phb:#000;--shadow:0 30px 60px -28px rgba(0,0,0,.8);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0c0e;--fg:#f2f3f5;--mute:#9ba0a8;--surf:#15171a;--surf2:#1e2125;--line:#2a2e33;--acc:#8b7dff;--accfg:#0b0c0e;--btn:#f2f3f5;--btnfg:#0b0c0e;--p1:#1d1846;--p2:#3a231b;--p3:#12332b;--p4:#142744;--pos:#5fd6b4;--neg:#ff8a7a;--phb:#000;--shadow:0 30px 60px -28px rgba(0,0,0,.8);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px;border-radius:10px}
+h1,h2,h3,h4{font-family:var(--disp);margin:0;text-wrap:balance}
+h1{font-size:clamp(46px,7.6vw,112px);line-height:.95;font-weight:700;letter-spacing:-.045em}
+h2{font-size:clamp(34px,5vw,72px);line-height:.98;font-weight:700;letter-spacing:-.04em}
+h3{font-size:clamp(22px,2.4vw,32px);line-height:1.08;font-weight:700;letter-spacing:-.03em}
+p{margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:clamp(16px,3.5vw,40px)}
+.mute{color:var(--mute)}
+.lead{font-size:clamp(18px,1.6vw,22px);line-height:1.45;color:var(--mute);max-width:480px;text-wrap:pretty}
+.sec{padding-block:clamp(48px,7vw,104px)}
+.num{font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:box-shadow .3s}
+.nav.sc{box-shadow:0 1px 0 var(--line)}
+.nav>.wrap{display:flex;align-items:center;gap:28px;height:72px}
+.lg{height:50px;width:auto;border-radius:10px;background:#000;display:block}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:-.05em;background:none;border:0;cursor:pointer;padding:0}
+.tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;cursor:pointer;padding:10px 14px;border-radius:999px;color:var(--mute);font-weight:600;font-size:15px;white-space:nowrap;transition:color .2s,background .2s}
+.tab:hover{color:var(--fg)}
+.tab.cur{color:var(--fg)}
+.tab.cur{background:var(--surf)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:600;font-size:16px;padding:14px 26px;border:0;cursor:pointer;transition:transform .2s,background .2s,opacity .2s;white-space:nowrap;background:var(--btn);color:var(--btnfg)}
+.btn:hover{opacity:.86}
+.btn:active{transform:scale(.97)}
+.btn.sec{background:var(--surf);color:var(--fg)}
+.btn.sec:hover{background:var(--surf2);opacity:1}
+.btn.sm{padding:10px 20px;font-size:15px}
+.btn.lg{padding:18px 34px;font-size:17px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:0;background:var(--surf);cursor:pointer;display:grid;place-items:center;flex:none}
+
+/* views / reveal */
+[data-view]{display:none}
+[data-view].on{display:block}
+.pre{opacity:0;transform:translateY(30px)}
+[data-rv]{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+
+/* hero */
+.hero{padding-top:12px}
+.heropanel{border-radius:clamp(24px,3vw,44px);background:linear-gradient(120deg,var(--p1) 0%,var(--p2) 100%);overflow:hidden;position:relative}
+.hero .heropanel{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:20px;padding:clamp(28px,5vw,80px) clamp(24px,5vw,80px) 0}
+.hcopy{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;padding-bottom:clamp(28px,5vw,80px)}
+.ln{display:block;overflow:hidden;padding-bottom:.06em}
+.ln>span{display:block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.ln:nth-child(2)>span{animation-delay:.1s}.ln:nth-child(3)>span{animation-delay:.2s}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+.fade{animation:fadeup .8s .4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.hero .lead{color:color-mix(in srgb,var(--fg) 70%,transparent)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.cap{display:flex;width:100%;max-width:480px;background:var(--bg);border-radius:999px;padding:6px}
+.cap input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--fg);padding:0 18px;outline:0}
+.cap:focus-within{box-shadow:0 0 0 3px var(--acc)}
+.note{font-size:14px;min-height:20px;font-weight:600}
+form{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:0}
+
+/* phones */
+.phones{position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:560px;gap:0}
+.ph{width:min(290px,70%);border-radius:44px;background:var(--phb);padding:9px;box-shadow:var(--shadow);flex:none;position:relative}
+.phs{border-radius:36px;background:var(--bg);color:var(--fg);padding:22px 16px 16px;min-height:540px;display:flex;flex-direction:column;gap:12px;overflow:hidden;position:relative}
+.phones .ph:nth-child(1){transform:translateX(18%) rotate(-5deg);z-index:2;margin-bottom:-60px}
+.phones .ph:nth-child(2){transform:translateX(-18%) rotate(5deg) translateY(40px)}
+.phones.one .ph{transform:none;margin:0}
+.phs small{color:var(--mute);font-weight:600}
+.bal{font-family:var(--disp);font-size:38px;font-weight:700;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
+.act{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.act span{background:var(--surf);border-radius:14px;padding:10px 0;font-size:12px;font-weight:600;text-align:center}
+.tx{display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-size:14px;font-weight:600;border-top:1px solid var(--line)}
+.tx i{display:block;font-style:normal;font-weight:500;font-size:12px;color:var(--mute)}
+.tx.new{animation:txin .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes txin{from{opacity:0;transform:translateY(-14px);background:var(--p1)}to{opacity:1;transform:none}}
+.up{color:var(--pos)}.dn{color:var(--neg)}
+.mini{background:var(--surf);border-radius:16px;padding:14px;font-size:13px;font-weight:600;display:grid;gap:6px}
+.ring{--v:50;width:150px;aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--acc) calc(var(--v)*1%),var(--surf2) 0);display:grid;place-items:center;margin:8px auto;transition:background .6s}
+.ring div{width:118px;aspect-ratio:1;border-radius:50%;background:var(--bg);display:grid;place-items:center;text-align:center;font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.04em;line-height:1.1}
+.ring small{display:block;font-family:var(--body);font-size:11px;letter-spacing:0}
+.ai{margin-top:auto;border-radius:18px;padding:14px;font-size:13px;font-weight:600;background:var(--acc);color:var(--accfg)}
+.bubble{padding:12px 14px;border-radius:18px;font-size:13px;font-weight:600;max-width:88%}
+.bubble.q{align-self:flex-end;background:var(--surf)}
+.bubble.a{background:var(--acc);color:var(--accfg)}
+
+/* panels */
+.panel{border-radius:clamp(24px,3vw,44px);padding:clamp(26px,5vw,72px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:center;overflow:hidden}
+.panel.rev .ptxt{order:2}
+.panel .ptxt{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-content:center}
+.panel .phones{min-height:0}
+.p1{background:var(--p1)}.p2{background:var(--p2)}.p3{background:var(--p3)}.p4{background:var(--p4)}.pS{background:var(--surf)}
+.pK{background:#191c1f;color:#fff}.pK .lead{color:#b9bdc3}.pK .mute{color:#b9bdc3}
+.panel .lead{color:color-mix(in srgb,currentColor 68%,transparent)}
+.panel .phs{min-height:0}
+.seg{display:inline-flex;gap:4px;background:color-mix(in srgb,var(--bg) 55%,transparent);border-radius:999px;padding:4px;flex-wrap:wrap;width:fit-content;max-width:100%}
+.seg button{border:0;background:none;padding:10px 18px;border-radius:999px;font-weight:600;font-size:15px;color:inherit;cursor:pointer;transition:.2s;opacity:.7}
+.seg button.on{background:var(--btn);color:var(--btnfg);opacity:1}
+.stack{display:grid;gap:16px}
+.hd{display:grid;gap:16px;margin-bottom:clamp(24px,4vw,48px)}
+
+/* trust row */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:left}
+.trust .big{font-family:var(--disp);font-size:clamp(34px,4.2vw,60px);font-weight:700;letter-spacing:-.045em;line-height:1}
+.trust span.mute{font-size:15px}
+
+/* card tier row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tier{border-radius:32px;background:var(--surf);padding:28px;display:grid;gap:20px;align-content:space-between;min-height:380px;transition:transform .3s}
+.tier:hover{transform:translateY(-6px)}
+.vc{width:100%;max-width:300px;aspect-ratio:1.6;border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--c1,#191c1f),var(--c2,#555b63));box-shadow:var(--shadow);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.vc small{font-weight:500;opacity:.8}
+.tier:hover .vc{transform:rotate(-4deg) scale(1.04)}
+.vc .chipc{width:34px;height:26px;border-radius:6px;background:linear-gradient(135deg,#f3d58a,#b88a2e)}
+
+/* invest list */
+.inv{display:grid;gap:0}
+.inv .tx{align-items:center}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.pill.up{background:color-mix(in srgb,var(--pos) 16%,transparent)}.pill.dn{background:color-mix(in srgb,var(--neg) 16%,transparent)}
+
+/* plans */
+.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.plans.p3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.plan{display:flex;flex-direction:column;gap:14px;border-radius:32px;padding:30px;background:var(--surf);transition:transform .3s}
+.plan:hover{transform:translateY(-6px)}
+.plan.hot{background:var(--btn);color:var(--btnfg)}
+.plan.hot .mute,.plan.hot ul{color:color-mix(in srgb,var(--btnfg) 70%,transparent)}
+.plan.hot .btn{background:var(--bg);color:var(--fg)}
+.price{font-family:var(--disp);font-size:40px;font-weight:700;letter-spacing:-.045em;line-height:1}
+.price small{font-family:var(--body);font-size:15px;font-weight:500;letter-spacing:0;opacity:.7}
+.plan ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;flex:1;color:var(--mute);font-size:15px}
+.plan li:before{content:"✓";margin-right:10px;font-weight:800}
+
+/* chart etc. */
+.cf{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:16px;align-items:stretch}
+.box{background:var(--surf);border-radius:32px;padding:clamp(20px,3vw,36px)}
+.chartbox{position:relative}
+.seg.dark{background:var(--surf2)}
+svg text{fill:var(--mute);font:600 11px var(--body);font-variant-numeric:tabular-nums}
+.grid-l{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--bg);border-radius:14px;padding:10px 14px;font-size:13px;font-weight:600;box-shadow:var(--shadow);transform:translate(-50%,-110%);opacity:0;transition:opacity .15s;white-space:nowrap;z-index:2}
+.tip b{display:block;font-family:var(--disp);font-size:20px;letter-spacing:-.02em}
+.ins{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-radius:18px;padding:16px;font-size:14px;font-weight:600;margin-top:16px}
+.ico{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--p1);color:var(--acc);flex:none;font-weight:800;font-size:12px}
+.chat{display:flex;flex-direction:column;gap:12px;height:100%}
+.msgs{display:flex;flex-direction:column;gap:10px;flex:1;min-height:240px;max-height:330px;overflow-y:auto}
+.m{padding:12px 16px;border-radius:18px;font-size:14px;font-weight:500;max-width:92%}
+.m.q{align-self:flex-end;background:var(--bg);font-weight:600}
+.m.a{background:var(--acc);color:var(--accfg);font-weight:600}
+.qs{display:flex;flex-wrap:wrap;gap:8px}
+.qs button{border:0;background:var(--bg);border-radius:999px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.qs button:hover{background:var(--acc);color:var(--accfg)}
+.feed{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.feed li{display:flex;gap:12px;align-items:center;background:var(--bg);border-radius:16px;padding:14px 16px;font-size:14px;font-weight:600;animation:txin .6s both}
+.feed em{font-style:normal;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--p1);color:var(--acc);white-space:nowrap}
+.feed i{margin-left:auto;font-style:normal;color:var(--mute);font-size:12px;white-space:nowrap}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:center}
+.ctl{display:grid;gap:6px;margin-bottom:18px}
+.ctl label{display:flex;justify-content:space-between;font-weight:600;font-size:15px}
+input[type=range]{width:100%;accent-color:var(--acc);height:28px}
+.out{font-family:var(--disp);font-size:clamp(44px,6.5vw,92px);font-weight:700;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.bars{display:grid;gap:10px;margin-top:20px}
+.bar{height:42px;border-radius:12px;background:var(--bg);overflow:hidden}
+.bar div{height:100%;display:flex;align-items:center;padding-inline:14px;font-size:13px;font-weight:700;white-space:nowrap;transition:width .5s cubic-bezier(.2,.8,.2,1);min-width:fit-content;color:var(--accfg);background:var(--acc)}
+.bar.b2 div{background:var(--pos)}
+.bar.b3 div{background:var(--fg);color:var(--bg)}
+.sw{display:flex;gap:10px;margin-top:16px}
+.sw button{width:32px;height:32px;border-radius:50%;border:3px solid transparent;cursor:pointer;outline:1px solid var(--line)}
+.sw button.on{border-color:var(--fg)}
+.bento{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tile{background:var(--surf);border-radius:32px;padding:30px;display:grid;gap:14px;align-content:space-between;min-height:260px;transition:transform .3s}
+.tile:hover{transform:translateY(-6px)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--bg)}
+.fx{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;align-items:start}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fi{text-align:left;background:var(--surf);border:2px solid transparent;border-radius:22px;padding:18px 20px;cursor:pointer;transition:.2s}
+.fi:hover{transform:translateY(-2px)}
+.fi.sel{border-color:var(--fg)}
+.fi b{display:block;font-size:16px}
+.fi span{font-size:13px;color:var(--mute)}
+.fdet{position:sticky;top:calc(92px + env(safe-area-inset-top,0px));min-height:330px;background:var(--p1);border-radius:32px;padding:32px}
+.demo{background:var(--bg);border-radius:16px;padding:16px;font-size:14px;font-weight:600;margin-top:18px}
+.tl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;position:relative}
+.tl:before{content:"";position:absolute;left:0;right:0;top:19px;height:2px;background:var(--surf2)}
+.tl:after{content:"";position:absolute;left:0;top:19px;height:2px;width:var(--p,0%);background:var(--acc);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.tl>div{position:relative;display:grid;gap:8px;align-content:start}
+.tl .d{width:40px;height:40px;border-radius:50%;background:var(--bg);border:2px solid var(--surf2);display:grid;place-items:center;font-weight:700;z-index:1;transition:.4s}
+.tl .d.on{border-color:var(--acc);color:var(--acc)}
+.tl b{font-family:var(--disp);font-size:22px;letter-spacing:-.03em}
+.team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.av{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:var(--disp);font-weight:700;font-size:22px;background:var(--p1);color:var(--acc)}
+.kpis{display:flex;flex-wrap:wrap;gap:8px}
+.kpis .chip{background:color-mix(in srgb,var(--bg) 70%,transparent)}
+.cta{border-radius:clamp(24px,3vw,44px);padding:clamp(36px,7vw,100px);display:grid;gap:24px;justify-items:start;background:var(--p1)}
+.cta .lead{color:color-mix(in srgb,var(--fg) 70%,transparent)}
+.qr{width:120px;height:120px;border-radius:18px;background:var(--bg);padding:10px}
+.sp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:end}
+
+footer{background:var(--surf);margin-top:40px;padding-block:64px 40px;font-size:14px;color:var(--mute)}
+footer .cols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px;margin-bottom:40px}
+footer .cols div{display:grid;gap:10px;align-content:start}
+footer .cols b{color:var(--fg);font-family:var(--disp);font-size:16px}
+.fl{background:none;border:0;padding:0;text-align:left;color:var(--mute);cursor:pointer;font-size:15px}
+.fl:hover{color:var(--fg)}
+footer p{max-width:900px;margin-top:14px;font-size:13px}
+
+@media(max-width:980px){
+.hero .heropanel,.panel,.two,.cf,.fx{grid-template-columns:minmax(0,1fr)}
+.panel.rev .ptxt{order:0}
+.phones{min-height:480px}
+.trust{grid-template-columns:1fr 1fr}
+.cards3,.bento,.team{grid-template-columns:minmax(0,1fr)}
+.plans,.plans.p3{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tl{grid-template-columns:1fr 1fr;row-gap:28px}.tl:before,.tl:after{display:none}
+.fdet{position:relative;top:0}
+footer .cols{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+.nav>.wrap{gap:8px;height:64px}.logo{font-size:22px}.nav .btn{display:none}
+.plans,.plans.p3,.fgrid{grid-template-columns:minmax(0,1fr)}
+.phones .ph:nth-child(2){display:none}
+.phones .ph:nth-child(1){transform:none;margin:0}
+.phones{min-height:0}
+.ph{width:min(290px,86%)}
+.trust{grid-template-columns:1fr}
+}
+
+.mega{display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg);box-shadow:0 36px 50px -34px rgba(0,0,0,.4);border-bottom:1px solid var(--line);max-height:calc(100vh - 80px);overflow:auto}
+.nav.mo-p #mega,.nav.mo-b #bmega,.nav.mo-s #smega{display:block;animation:fadeup .25s both}
+.mtop{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:22px}
+.mtop b{font-family:var(--disp);font-size:22px;letter-spacing:-.03em}
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 32px;padding-block:20px 36px;align-items:start}
+.mc{display:grid;gap:26px;align-content:start}
+@media(max-width:980px){.mc{margin-bottom:26px}}
+.mcol{display:grid;gap:2px;align-content:start}
+.mcol h4{font-family:var(--disp);font-size:14px;font-weight:700;margin:0 0 6px;color:var(--fg)}
+.mi{background:none;border:0;text-align:left;padding:7px 10px;margin-left:-10px;border-radius:10px;cursor:pointer;color:var(--mute);font-size:15px;font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mi:hover{background:var(--surf);color:var(--fg)}
+.soon{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--p2);color:var(--fg)}
+.caret{transition:transform .2s;margin-left:2px;vertical-align:middle}
+.nav.mo-p #ptab .caret,.nav.mo-b #btab .caret,.nav.mo-s #stab .caret{transform:rotate(180deg)}
+.crumb{background:none;border:0;padding:0;font-weight:600;font-size:15px;color:color-mix(in srgb,var(--fg) 65%,transparent);cursor:pointer;width:fit-content}
+.crumb:hover{color:var(--fg)}
+.allp{display:block;column-count:4;column-gap:16px}
+.allp .tile{min-height:0;align-content:start;break-inside:avoid;margin-bottom:16px}
+.allp .tile:hover{transform:none}
+.allp .mi{margin-left:-10px}
+@media(max-width:980px){.mgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.allp{column-count:2}}
+@media(max-width:600px){.mgrid{grid-template-columns:minmax(0,1fr)}.allp{column-count:1}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ln>span,.fade,.tx.new,.feed li{animation:none}.pre{opacity:1;transform:none}[data-rv]{transition:none}}
+</style>
+
+<header class="nav" id="nav"><div class="wrap">
+  <button class="logo" data-go="personal" aria-label="ONIX home"><img class="lg" alt="" src="data:image/webp;base64,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" width="33" height="50">ONIX</button>
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab" id="ptab" data-tab="personal" aria-haspopup="true" aria-expanded="false" aria-controls="mega">Personal <svg class="caret" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5"/></svg></button>
+    <button class="tab" id="btab" data-tab="business" aria-haspopup="true" aria-expanded="false" aria-controls="bmega">Business <svg class="caret" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5"/></svg></button>
+    <button class="tab" data-go="teens">Kids &amp; Teens</button>
+    <button class="tab" data-go="features">Features</button>
+    <button class="tab" data-go="investors">Investors</button>
+    <button class="tab" id="stab" data-tab="solutions" aria-haspopup="true" aria-expanded="false" aria-controls="smega">Solutions <svg class="caret" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5"/></svg></button>
+    <button class="tab" data-go="company">Company</button>
+  </nav>
+  <button class="icon-btn" id="theme" aria-label="Switch theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+  <a class="btn sec sm" href="/login">Log in</a>
+  <a class="btn sm" href="/register">Sign up</a>
+</div>
+<div class="mega" id="mega"><div class="wrap"><div class="mtop"><b>Personal</b><button class="btn sec sm" data-go="personal">Personal home</button></div><div class="mgrid" id="mgrid"></div></div></div>
+<div class="mega" id="bmega"><div class="wrap"><div class="mtop"><b>Business</b><button class="btn sec sm" data-go="business">Business home</button></div><div class="mgrid" id="bgrid"></div></div></div>
+<div class="mega" id="smega"><div class="wrap"><div class="mtop"><b>Solutions</b><button class="btn sec sm" data-go="solutions">Solutions home</button></div><div class="mgrid" id="sgrid"></div></div></div></header>
+
+<!-- PERSONAL -->
+<main data-view="personal">
+<section class="hero"><div class="wrap"><div class="heropanel">
+  <div class="hcopy">
+    <h1 aria-label="Banking and beyond, in one app."><span class="ln"><span>Banking &amp;</span></span><span class="ln"><span>beyond, in</span></span><span class="ln"><span>one app.</span></span></h1>
+    <p class="lead fade">Your bank, redefined. Daily banking, UPI, savings, investing and an AI assistant. Sign up free in a tap.</p>
+    <div class="row fade"><a class="btn lg" href="#" data-demo>Download the app</a><button class="btn sec lg" data-go="features">See all 20 features</button></div>
+  </div>
+  <div class="phones">
+    <div class="ph"><div class="phs"><small>Personal account</small><div class="bal">₹1,42,860</div><div class="act"><span>Send</span><span>Scan</span><span>Save</span><span>Invest</span></div><div id="ptx"></div><div class="ai">ONIX AI: You spent 12% less on food this month.</div></div></div>
+    <div class="ph"><div class="phs"><small>Vault</small><div class="ring" style="--v:64"><div>64%<small>of trip goal</small></div></div><div class="mini"><span>Goa trip</span><span class="up">+₹38 interest today</span></div><div class="mini"><span>Salary sorted</span><span class="mute">40% bills · 20% save</span></div></div></div>
+  </div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p2" data-rv>
+  <div class="ptxt"><h2>Your salary, sorted before you spend it.</h2><p class="lead">Spaces split every credit into bills, savings and spending. Drag the sliders to try it on ₹85,000.</p>
+    <div><div class="ctl"><label for="sb">Bills <span id="sbv" class="num">40%</span></label><input id="sb" type="range" min="0" max="80" value="40"></div><div class="ctl"><label for="ss">Savings <span id="ssv" class="num">20%</span></label><input id="ss" type="range" min="0" max="80" value="20"></div></div>
+    <a class="btn" href="#" data-demo style="width:fit-content">Move your salary</a></div>
+  <div class="bars" style="margin:0"><div class="bar"><div id="b1"></div></div><div class="bar b2"><div id="b2"></div></div><div class="bar b3"><div id="b3"></div></div></div>
+</div></div></section>
+
+<section><div class="wrap"><div class="trust" data-rv>
+  <div><div class="big"><span class="cnt" data-to="60" data-suf="M+">0</span></div><span class="mute">MSMEs across India to serve</span></div>
+  <div><div class="big"><span class="cnt" data-to="2" data-suf=" min">0</span></div><span class="mute">to open an account</span></div>
+  <div><div class="big">24/7</div><span class="mute">in-app support and AI help</span></div>
+  <div><div class="big"><span class="cnt" data-to="20">0</span></div><span class="mute">features in one app</span></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p4" data-rv>
+  <div class="ptxt"><h2>Life, meets savings.</h2><p class="lead">Grow your money with interest paid daily on instant-access vaults. Pick a goal.</p>
+    <div class="seg" id="goals"><button class="on" data-g="0">Trip</button><button data-g="1">Wedding</button><button data-g="2">New shop</button></div>
+    <a class="btn" href="#" data-demo style="width:fit-content">Explore savings</a></div>
+  <div class="phones one"><div class="ph"><div class="phs"><small id="gname">Goa trip</small><div class="ring" id="gring" style="--v:64"><div><span id="gpct">64%</span><small>of goal</small></div></div><div class="mini"><span>Saved <b id="gsaved" class="num">₹64,000</b></span><span class="mute">Goal <span id="gtarget" class="num">₹1,00,000</span></span></div><div class="mini"><span class="up">+₹38 interest today</span><span class="mute" id="gnote">On track for 4 months</span></div></div></div></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Elevate your spend.</h2><p class="lead">Earn points on every purchase and redeem them for travel and rewards. Higher plans earn faster.</p></div>
+  <div class="cards3" data-rv>
+    <div class="tier"><div><h3>Standard</h3><p class="mute" style="margin-top:8px">1 point per ₹200 spent</p></div><div class="vc" style="--c1:#191c1f;--c2:#4a5058"><small>ONIX</small><span class="chipc"></span><span>•••• 4821</span></div></div>
+    <div class="tier"><div><h3>Plus</h3><p class="mute" style="margin-top:8px">2 points per ₹200 and free ATM</p></div><div class="vc" style="--c1:#3d2ee0;--c2:#9a8cff"><small>ONIX Plus</small><span class="chipc"></span><span>•••• 7310</span></div></div>
+    <div class="tier"><div><h3>Premium</h3><p class="mute" style="margin-top:8px">3 points per ₹200 and lounges</p></div><div class="vc" style="--c1:#7a5b1c;--c2:#e8c673"><small>ONIX Premium</small><span class="chipc"></span><span>•••• 0095</span></div></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="panel pK" data-rv>
+  <div class="ptxt"><h2>Go virtual.</h2><p class="lead">Create a card in seconds and add it to your phone wallet to pay right away.</p>
+    <div class="seg" id="ctab" style="background:#2a2e33"><button class="on" data-k="v" style="color:#fff">Virtual cards</button><button data-k="p" style="color:#fff">Physical cards</button></div>
+    <div class="sw" id="sw"></div></div>
+  <div style="display:grid;place-items:center"><div class="vc" id="vcard" style="--c1:#3d2ee0;--c2:#9a8cff;max-width:340px"><small id="vkind">Virtual card</small><span class="chipc"></span><span>•••• 4821</span></div></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p1 rev" data-rv>
+  <div class="ptxt"><h2>Ask, and ONIX AI makes it happen.</h2><p class="lead">Your assistant, 24/7. Open the app, swipe and ask about spending, bills or any payment.</p><a class="btn" href="#" data-demo style="width:fit-content">Learn more</a></div>
+  <div class="phones one"><div class="ph"><div class="phs"><small>ONIX AI</small><div class="msgs" id="pm" style="min-height:300px"></div><div class="qs" id="pq"></div></div></div></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Your money's safe space.</h2></div>
+  <div class="bento" data-rv>
+    <div class="tile"><h3>Fraud checks, always on</h3><p class="mute">Every payment is checked before it leaves your account.</p></div>
+    <div class="tile"><h3>Lock your card instantly</h3><p class="mute">Freeze and unfreeze from the app in one tap.</p></div>
+    <div class="tile"><h3>Biometric login</h3><p class="mute">Fingerprint or Face ID, so only you can open the app.</p></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p3" data-rv>
+  <div class="ptxt"><h2>Explore stocks and funds.</h2><p class="lead">Start with ₹100. Buy stocks, ETFs and SIPs with low fees. Capital at risk.</p><a class="btn" href="#" data-demo style="width:fit-content">Try it out</a></div>
+  <div class="phones one"><div class="ph"><div class="phs"><small>Watchlist · sample data</small><div class="inv" id="inv"></div></div></div></div>
+</div></div></section>
+
+<section class="sec" id="allp"><div class="wrap"><div class="hd" data-rv><h2>Everything under Personal.</h2><p class="lead">Accounts, cards, protection, investing and more. Open any product to see how it works.</p></div><div class="allp" id="allg" data-rv></div></div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Choose your plan.</h2><p class="lead">Sample pricing for illustration.</p></div>
+  <div class="plans p3" data-rv>
+    <div class="plan"><h3>Standard</h3><div class="price">Free</div><p class="mute">For the financial basics.</p><ul><li>UPI and bill payments</li><li>1 virtual card</li><li>Spaces</li></ul><a class="btn sec" href="#" data-demo>Learn more</a></div>
+    <div class="plan hot"><h3>Plus</h3><div class="price">₹149<small>/month</small></div><p class="mute">For the smart spender.</p><ul><li>Higher savings interest</li><li>Purchase protection</li><li>Free ATM withdrawals</li></ul><a class="btn" href="#" data-demo>Learn more</a></div>
+    <div class="plan"><h3>Premium</h3><div class="price">₹499<small>/month</small></div><p class="mute">For elevating every day.</p><ul><li>Travel insurance</li><li>Airport lounges</li><li>Best savings rates</li></ul><a class="btn sec" href="#" data-demo>Learn more</a></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="cta" data-rv><h2>Join people who bank on ONIX.</h2><p class="lead">Download the app and open your account in two minutes.</p><a class="btn lg" href="#" data-demo>Download the app</a></div></div></section>
+</main>
+
+
+<!-- PRODUCT PAGES -->
+<main data-view="product">
+<section class="hero"><div class="wrap"><div class="heropanel">
+  <div class="hcopy">
+    <button class="crumb" id="pcrumb" data-go="personal">Personal</button>
+    <h1 id="ph1"></h1>
+    <p class="lead fade" id="plead"></p>
+    <div class="kpis fade" id="psoon"></div>
+    <div class="row fade"><a class="btn lg" href="#" data-demo id="pcta">Get the app</a><button class="btn sec lg" id="pback" data-go="personal">Back to Personal</button></div>
+  </div>
+  <div class="phones one"><div class="ph"><div class="phs"><small id="pphl"></small><div class="bal" id="pbal"></div><small id="pbl"></small><div id="prows"></div><div class="ai" id="pai"></div></div></div></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="bento" id="pbul"></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="hd"><h2>More in <span id="pcat"></span></h2></div><div class="chips" id="prel"></div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="cta"><h2>Everything in one app.</h2><p class="lead">Open your account in two minutes and add products as you need them.</p><a class="btn lg" href="#" data-demo>Download the app</a></div></div></section>
+</main>
+
+<!-- BUSINESS -->
+<main data-view="business">
+<section class="hero"><div class="wrap"><div class="heropanel" style="background:linear-gradient(120deg,var(--p4),var(--p3))">
+  <div class="hcopy">
+    <h1 aria-label="Business banking that does your books."><span class="ln"><span>Business</span></span><span class="ln"><span>banking that</span></span><span class="ln"><span>does your books.</span></span></h1>
+    <p class="lead fade">Current accounts, payments, GST, payroll and an AI CFO for Indian MSMEs. One account, no spreadsheets.</p>
+    <form class="fade" id="f1"><div class="cap"><input id="em1" type="email" placeholder="Work email" aria-label="Work email" autocomplete="email"><button class="btn" type="submit">Get started free</button></div><div class="note" id="n1" role="status"></div></form>
+  </div>
+  <div class="phones">
+    <div class="ph"><div class="phs"><div style="display:flex;justify-content:space-between"><small>Business account</small><small class="up">● Live</small></div><div class="bal" id="bal">₹24,86,420</div><svg id="spark" viewBox="0 0 280 60" preserveAspectRatio="none" style="width:100%;height:60px" aria-hidden="true"></svg><div class="act"><span>Pay</span><span>Invoice</span><span>Payroll</span><span>GST</span></div><div id="txl"></div><div class="ai">AI CFO: Friday's payroll is covered with 18 days of runway.</div></div></div>
+    <div class="ph"><div class="phs"><small>Forecast</small><div class="mini"><span>Next 12 weeks</span><span class="up">Cash-positive</span></div><div class="mini"><span>Late invoice</span><span class="mute">Kiran Textiles, 12 days</span></div><div class="mini"><span>GSTR-3B</span><span class="mute">Due in 6 days, draft ready</span></div><div class="ai">₹62,300 GST is already set aside.</div></div></div>
+  </div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="trust" data-rv>
+  <div><div class="big"><span class="cnt" data-to="2" data-suf=" min">0</span></div><span class="mute">to open an account</span></div>
+  <div><div class="big"><span class="cnt" data-to="42">0</span></div><span class="mute">vendors paid in one approval</span></div>
+  <div><div class="big"><span class="cnt" data-to="415">0</span></div><span class="mute">bank entries matched in a sample month</span></div>
+  <div><div class="big">1 app</div><span class="mute">for banking, GST and payroll</span></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p1" data-rv>
+  <div class="ptxt"><h2>Pay and get paid, in one flow.</h2><p class="lead">Upload bills or let AI read them. Approve once and ONIX picks the date that keeps cash safe.</p>
+    <div class="seg" id="flow"><button class="on" data-s="0">Invoice in</button><button data-s="1">AI checks</button><button data-s="2">Approve</button><button data-s="3">Reconciled</button></div></div>
+  <div class="phones one"><div class="ph"><div class="phs" id="fscr" style="min-height:420px"><small>Payables</small><div id="fbody" style="display:grid;gap:10px"></div></div></div></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Know your cash 90 days out.</h2><p class="lead">Change the scenario and watch the forecast move. Hover the line for the exact week.</p></div>
+  <div class="cf" data-rv>
+    <div class="box"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><div class="seg dark" id="scn"><button class="on" data-k="base">Current plan</button><button data-k="hire">Hire 2 people</button><button data-k="late">Customers pay late</button></div><span class="mute" style="font-size:13px;font-weight:600">Cash balance, ₹ lakh</span></div>
+      <div class="chartbox" id="cbox"><svg id="chart" viewBox="0 0 720 320" width="100%" role="img" aria-label="Cash balance forecast for the next 12 weeks"></svg><div class="tip" id="tip"></div></div>
+      <div class="ins"><span class="ico">AI</span><span id="ins"></span></div></div>
+    <div class="box"><div class="chat"><h3>Ask your AI CFO</h3><div class="msgs" id="msgs" aria-live="polite"></div><div class="qs" id="qs"></div></div></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Everything your business spends and earns.</h2></div>
+  <div class="bento" data-rv>
+    <div class="tile"><h3>Bulk payouts</h3><p class="mute">UPI, NEFT and RTGS for every vendor, approved once.</p><div class="chips"><span class="chip">UPI</span><span class="chip">NEFT</span><span class="chip">RTGS</span></div></div>
+    <div class="tile"><h3>Collections</h3><p class="mute">Payment links, QR and virtual accounts matched to the right invoice.</p><div class="chips"><span class="chip">Links</span><span class="chip">QR</span><span class="chip">Virtual accounts</span></div></div>
+    <div class="tile"><h3>Team cards</h3><p class="mute">Virtual and physical cards with limits per person.</p><div class="chips"><span class="chip">Virtual</span><span class="chip">Physical</span><span class="chip">Limits</span></div></div>
+    <div class="tile"><h3>GST and TDS</h3><p class="mute">Tax is set aside from every receipt, so filing day is calm.</p><div class="chips"><span class="chip">GSTR-1</span><span class="chip">GSTR-3B</span><span class="chip">TDS</span></div></div>
+    <div class="tile"><h3>Payroll</h3><p class="mute">Salaries, reimbursements and statutory payouts from one balance.</p><div class="chips"><span class="chip">PF</span><span class="chip">ESI</span><span class="chip">Payslips</span></div></div>
+    <div class="tile"><h3>Credit</h3><p class="mute">Working-capital offers from your real cash flow, not collateral.</p><div class="chips"><span class="chip">Overdraft</span><span class="chip">Invoice financing</span></div></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="panel pS two" data-rv style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+  <div class="ptxt"><h2>Agents working while you sleep.</h2><p class="lead">Reconciliation, collections, compliance and fraud checks run all day on your live bank data. This is a simulated feed.</p></div>
+  <ul class="feed" id="feed"></ul>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="panel p3" data-rv>
+  <div class="ptxt"><h2>Get your evenings back.</h2><p class="lead">Illustrative: 12 minutes per invoice by hand, 2 with ONIX, at ₹400 an hour.</p></div>
+  <div><div class="ctl"><label for="iv">Invoices a month <span id="ivv" class="num">300</span></label><input id="iv" type="range" min="20" max="3000" step="10" value="300"></div><div class="mute" style="font-weight:600">You save <b class="num" id="roiH" style="color:var(--fg)">50</b> hours a month, worth</div><div class="out" id="roiR">₹0</div><div class="mute" style="font-weight:600">a year</div></div>
+</div></div></section>
+
+<section class="sec" id="allb"><div class="wrap"><div class="hd" data-rv><h2>Everything under Business.</h2><p class="lead">Accounts, payments, spend, treasury, AI CFO and more. Open any product to see how it works.</p></div><div class="allp" id="ballg" data-rv></div></div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="hd" data-rv><h2>Choose your plan.</h2><p class="lead">Start free. Upgrade as you grow. Sample pricing for illustration.</p></div>
+  <div class="plans" data-rv>
+    <div class="plan"><h3>Starter</h3><div class="price">Free</div><ul><li>Business current account</li><li>UPI and NEFT</li><li>1 virtual card</li><li>Basic AI CFO</li></ul><a class="btn sec" href="#" data-demo>Get started</a></div>
+    <div class="plan hot"><h3>Growth</h3><div class="price">₹999<small>/month</small></div><ul><li>Bulk payments and payroll</li><li>GST auto-reserve</li><li>10 team cards</li><li>Cash forecast</li></ul><a class="btn" href="#" data-demo>Choose Growth</a></div>
+    <div class="plan"><h3>Scale</h3><div class="price">₹2,999<small>/month</small></div><ul><li>Full AI CFO</li><li>Credit and invoice financing</li><li>Unlimited cards</li><li>Accountant workspace</li></ul><a class="btn sec" href="#" data-demo>Choose Scale</a></div>
+    <div class="plan"><h3>Enterprise</h3><div class="price">Custom</div><ul><li>API and ERP links</li><li>Dedicated manager</li><li>Custom limits</li><li>Multi-entity</li></ul><a class="btn sec" href="#" data-demo>Talk to us</a></div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><div class="cta" data-rv style="background:var(--p4)"><h2>Put your finance team on autopilot.</h2><p class="lead">Open an account in two minutes. The AI CFO starts on day one.</p><a class="btn lg" href="#" data-demo>Open a business account</a></div></div></section>
+</main>
+
+<!-- TEENS -->
+<main data-view="teens">
+<section class="hero"><div class="wrap"><div class="heropanel" style="background:linear-gradient(120deg,var(--p3),var(--p2))">
+  <div class="hcopy"><h1 aria-label="Money skills start early."><span class="ln"><span>Money skills</span></span><span class="ln"><span>start early.</span></span></h1><p class="lead fade">A parent-controlled account with a card, pocket money and spending limits.</p><div class="row fade"><a class="btn lg" href="#" data-demo>Open a Junior account</a></div></div>
+  <div class="phones one"><div class="ph"><div class="phs"><small>ONIX Junior</small><div class="bal">₹2,150</div><div class="act"><span>Spend</span><span>Save</span><span>Give</span><span>Learn</span></div><div class="tx"><div>Pocket money<i>Weekly</i></div><span class="up">+₹500</span></div><div class="tx"><div>Book store<i>Card</i></div><span>−₹320</span></div><div class="ai">Cycle fund: 43% saved.</div></div></div></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="panel p1" data-rv><div class="ptxt"><h2>How long to reach the goal?</h2><p class="lead">Goal: a ₹8,000 cycle. Set the weekly pocket money and the share saved.</p></div>
+  <div><div class="ctl"><label for="al">Weekly pocket money <span class="num" id="alv">₹500</span></label><input id="al" type="range" min="100" max="2000" step="50" value="500"></div><div class="ctl"><label for="as">Saved toward the goal <span class="num" id="asv">50%</span></label><input id="as" type="range" min="10" max="100" step="5" value="50"></div><div class="out" id="aw">32 weeks</div></div></div></div></section>
+<section class="sec"><div class="wrap"><div class="bento" data-rv><div class="tile"><h3>Parents stay in control</h3><p class="mute">Set limits, lock the card and see every payment instantly.</p></div><div class="tile"><h3>Pocket money on schedule</h3><p class="mute">Weekly allowances and rewards for chores.</p></div><div class="tile"><h3>Goals that grow</h3><p class="mute">Kids set a goal and watch the bar fill.</p></div></div></div></section>
+</main>
+
+<!-- FEATURES -->
+<main data-view="features">
+<section class="hero"><div class="wrap"><div class="heropanel" style="background:linear-gradient(120deg,var(--p1),var(--p4));padding:clamp(28px,5vw,80px)">
+  <div class="hcopy" style="padding:0"><h1 aria-label="Twenty features in one account."><span class="ln"><span><span class="cnt" data-to="20">0</span> features</span></span><span class="ln"><span>in one account.</span></span></h1><p class="lead fade">Banking, an AI CFO, credit, insurance, wealth, trading and deals on the same live data. Pick one to see it work.</p></div></div></div></section>
+<section class="sec"><div class="wrap"><div class="seg pS" id="ftabs" style="margin-bottom:20px;background:var(--surf)"><button class="on" data-c="all">All 20</button><button data-c="Banking">Banking</button><button data-c="AI CFO">AI CFO</button><button data-c="Grow">Grow</button></div>
+  <div class="fx"><div class="fgrid" id="fg"></div><aside class="fdet" id="fd" aria-live="polite"></aside></div></div></section>
+</main>
+
+<!-- INVESTORS -->
+<main data-view="investors">
+<section class="hero"><div class="wrap"><div class="heropanel" style="background:linear-gradient(120deg,var(--p1),var(--p2))">
+  <div class="hcopy"><h1 aria-label="The bank an MSME's CFO would build."><span class="ln"><span>The bank an</span></span><span class="ln"><span>MSME's CFO</span></span><span class="ln"><span>would build.</span></span></h1>
+  <p class="lead fade">Banking and accounting together for Indian businesses, run by an AI that saves hours and unlocks credit.</p>
+  <div class="kpis fade"><span class="chip">MVP ready</span><span class="chip">100 businesses on the waitlist</span><span class="chip">Seed: ₹5 Cr for 10%</span></div>
+  <form class="fade" id="f2"><div class="cap"><input id="em2" type="email" placeholder="Investor email" aria-label="Investor email" autocomplete="email"><button class="btn" type="submit">Request the deck</button></div><div class="note" id="n2" role="status"></div></form></div>
+  <div class="phones one"><div class="ph"><div class="phs"><small>Why this wedge</small><div class="mini"><b>1</b><span>MSMEs juggle a bank portal, accounting software, GST and WhatsApp.</span></div><div class="mini"><b>2</b><span>The accountant picks the tools, so the accountant comes first.</span></div><div class="mini"><b>3</b><span>Cash-flow data unlocks credit in days. That is where revenue is.</span></div><div class="ai">Connect, then fund, then bank.</div></div></div></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="hd" data-rv><h2>Play with the revenue model.</h2><p class="lead">Change the assumptions. This shows the mechanics and is not a forecast.</p></div>
+<div class="panel pS" data-rv style="align-items:start">
+  <div><div class="ctl"><label for="m1">Businesses on ONIX <span class="num" id="m1v"></span></label><input id="m1" type="range" min="500" max="50000" step="500" value="5000"></div><div class="ctl"><label for="m2">Credit per business <span class="num" id="m2v"></span></label><input id="m2" type="range" min="2" max="50" step="1" value="10"></div><div class="ctl"><label for="m3">Net yield on credit <span class="num" id="m3v"></span></label><input id="m3" type="range" min="1" max="6" step=".5" value="3"></div><div class="ctl"><label for="m4">Payments per business a month <span class="num" id="m4v"></span></label><input id="m4" type="range" min="2" max="100" step="2" value="20"></div><div class="ctl"><label for="m5">Share on a paid plan <span class="num" id="m5v"></span></label><input id="m5" type="range" min="5" max="60" step="5" value="25"></div></div>
+  <div><div class="mute" style="font-weight:600">Annual revenue at this scale</div><div class="out" id="mt">₹0</div><div class="bars"><div class="bar"><div id="r1"></div></div><div class="bar b2"><div id="r2"></div></div><div class="bar b3"><div id="r3"></div></div></div><p class="mute" style="font-size:13px;margin-top:14px">Credit yield, 0.15% on payments volume and ₹999 a month plans. Assumptions are adjustable and illustrative.</p></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="hd" data-rv><h2>How the business compounds.</h2></div>
+<div class="tl" id="tl" data-rv>
+  <div><span class="d">1</span><b>Connect</b><p class="mute">Free AI CFO and a partner workspace for accountants.</p></div>
+  <div><span class="d">2</span><b>Fund</b><p class="mute">Working capital for manufacturing and trading MSMEs, closed in weeks.</p></div>
+  <div><span class="d">3</span><b>Bank</b><p class="mute">Payments, cards and the full account follow the data.</p></div>
+  <div><span class="d">4</span><b>Scale</b><p class="mute">Co-lending, then an own NBFC. M&amp;A and fundraising on the same rails.</p></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap"><div class="hd" data-rv><h2>The team.</h2></div>
+<div class="team" data-rv>
+  <div class="tile"><div class="av">R</div><h3>Robin Kumar</h3><p class="mute">Founder. Corporate law and finance.</p></div>
+  <div class="tile"><div class="av">D</div><h3>Danish</h3><p class="mute">AI and machine learning, 10+ years.</p></div>
+  <div class="tile"><div class="av">V</div><h3>Vaibhav Dixit</h3><p class="mute">Investment banking and M&amp;A, 9 years.</p></div>
+</div></div></section>
+</main>
+
+<!-- COMPANY -->
+<main data-view="company">
+<section class="hero"><div class="wrap"><div class="heropanel" style="padding:clamp(28px,5vw,80px);background:linear-gradient(120deg,var(--p2),var(--p1))"><div class="hcopy" style="padding:0"><h1 aria-label="Banking with an AI at the centre."><span class="ln"><span>Banking with</span></span><span class="ln"><span>an AI at the</span></span><span class="ln"><span>centre.</span></span></h1><p class="lead fade">ONIX builds banking, wealth and advisory products for Indian MSMEs and the people who run them.</p></div></div></div></section>
+<section class="sec"><div class="wrap"><div class="bento" data-rv><div class="tile"><h3>ONIX Bank</h3><p class="mute">Personal and business banking in one app.</p></div><div class="tile"><h3>AI CFO</h3><p class="mute">Forecasts, reconciliation and answers for owners.</p></div><div class="tile"><h3>Careers</h3><p class="mute">Roles open soon.</p></div></div></div></section>
+</main>
+<main data-view="solutions">
+<section class="hero"><div class="wrap"><div class="heropanel" style="padding:clamp(28px,5vw,80px);background:linear-gradient(120deg,var(--p4),var(--p3))"><div class="hcopy" style="padding:0"><h1 aria-label="Built for how you work."><span class="ln"><span>Built for how</span></span><span class="ln"><span>you work.</span></span></h1><p class="lead fade">Whatever your size or industry, ONIX fits the way your finance team runs. Pick yours to see how it works.</p></div></div></div></section>
+<section class="sec"><div class="wrap"><div class="hd" data-rv><h2>Everything under Solutions.</h2><p class="lead">By size and by industry. Open any one to see how it works.</p></div><div class="allp" id="sallg" data-rv></div></div></section>
+</main>
+
+<footer>
+<div class="wrap">
+  <div class="cols">
+    <div><b>Personal</b><button class="fl" data-p="bank-account">Bank Account</button><button class="fl" data-p="cards">Cards</button><button class="fl" data-p="savings-account">Savings Account</button><button class="fl" data-p="stocks">Stocks</button><button class="fl" data-p="intl-transfers">International transfers</button><button class="fl" data-go="teens">Kids &amp; Teens</button></div>
+    <div><b>Business</b><button class="fl" data-p="accept-payments">Accept payments</button><button class="fl" data-p="corporate-cards">Corporate cards</button><button class="fl" data-p="ai-forecasting">AI CFO</button><button class="fl" data-p="payroll-core">Payroll</button><button class="fl" data-p="apis">APIs</button><button class="fl" data-go="business">All Business</button></div>
+    <div><b>Solutions</b><button class="fl" data-p="startups">Startups</button><button class="fl" data-p="mid-market">Mid-market</button><button class="fl" data-p="enterprise">Enterprise</button><button class="fl" data-go="solutions">All solutions</button></div>
+    <div><b>ONIX</b><button class="fl" data-go="features">Features</button><button class="fl" data-go="investors">Investors</button><button class="fl" data-go="company">Company</button></div>
+    <div><b>Legal</b><a class="fl" href="#" data-demo>Terms</a><a class="fl" href="#" data-demo>Privacy</a><a class="fl" href="#" data-demo>Grievances</a></div>
+  </div>
+  <p>© 2026 ONIX. Concept design. Banking services will be provided through a regulated banking partner [partner and licence details to be added]. Figures, rates, prices and balances on this page are illustrative. Investments carry risk, and capital is at risk.</p>
+</div></footer>
+
+<script>
+(function(){
+var $=function(q,r){return (r||document).querySelector(q)},$$=function(q,r){return Array.prototype.slice.call((r||document).querySelectorAll(q))};
+var rm=matchMedia('(prefers-reduced-motion:reduce)').matches,inr=function(n){return Math.round(n).toLocaleString('en-IN')};
+$('#theme').addEventListener('click',function(){var r=document.documentElement,c=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',c==='dark'?'light':'dark')});
+document.addEventListener('click',function(e){if(e.target.closest('[data-demo]'))e.preventDefault()});
+addEventListener('scroll',function(){$('#nav').classList.toggle('sc',scrollY>8)},{passive:true});
+
+function form(f,i,n){$(f).addEventListener('submit',function(e){e.preventDefault();var ok=/^\S+@\S+\.\S+$/.test($(i).value.trim());$(n).style.color=ok?'var(--pos)':'var(--neg)';$(n).textContent=ok?'Thanks. This is a demo form and nothing was sent.':'Enter a valid email address.'})}
+form('#f1','#em1','#n1');form('#f2','#em2','#n2');
+
+/* phone feeds */
+function addTx(list,t,max){var d=document.createElement('div');d.className='tx new';d.innerHTML='<div>'+t[0]+'<i>'+t[1]+'</i></div><span class="'+(t[3]>0?'up':'')+'">'+t[2]+'</span>';list.prepend(d);while(list.children.length>max)list.lastChild.remove()}
+var BT=[['Sharma Steel','Vendor payment','−₹1,20,000',-120000],['Kiran Textiles','Invoice #204 paid','+₹3,45,000',345000],['GST payment','Auto-reserved','−₹62,300',-62300],['Patel Packaging','Vendor payment','−₹48,500',-48500],['Ravi Traders','Invoice #207 paid','+₹1,80,000',180000],['Payroll','18 people','−₹6,40,000',-640000]],bi=0,bal=2486420,tl=$('#txl');
+for(var k=0;k<3;k++)addTx(tl,BT[bi++%BT.length],3);
+setInterval(function(){if(document.hidden||rm||!$('[data-view=business]').classList.contains('on'))return;var t=BT[bi++%BT.length];bal+=t[3];$('#bal').textContent='₹'+inr(bal);addTx(tl,t,3)},3200);
+var PT=[['Salary','Auto-sorted','+₹85,000',1],['Chennai Metro','Travel','−₹60',-1],['Zomato','Food','−₹480',-1],['SIP','Invest','−₹5,000',-1],['Uber','Travel','−₹212',-1]],pi=0,pt=$('#ptx');
+for(k=0;k<4;k++)addTx(pt,PT[pi++%PT.length],4);
+setInterval(function(){if(document.hidden||rm||!$('[data-view=personal]').classList.contains('on'))return;addTx(pt,PT[pi++%PT.length],4)},2800);
+(function(){var sp=[40,44,41,48,46,52,50,57,55,60,58,66,63,70],w=280,h=60,mx=70,mn=40,pts=sp.map(function(v,i){return [i*w/13,h-6-(v-mn)/(mx-mn)*(h-14)]}),d='M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' L');$('#spark').innerHTML='<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".3"/><stop offset="1" stop-color="var(--acc)" stop-opacity="0"/></linearGradient></defs><path d="'+d+' L'+w+' '+h+' L0 '+h+'Z" fill="url(#sg)"/><path d="'+d+'" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="'+pts[13][0]+'" cy="'+pts[13][1]+'" r="4.5" fill="var(--acc)"/>'})();
+
+/* personal: sorter, goals, card, invest */
+function sort(){var b=+$('#sb').value,s=+$('#ss').value;if(b+s>100)s=100-b;var p=100-b-s,f=function(n){return '₹'+inr(85000*n/100)};$('#sbv').textContent=b+'%';$('#ssv').textContent=s+'%';[['b1','Bills',b],['b2','Savings',s],['b3','Spending',p]].forEach(function(a){var e=$('#'+a[0]);e.style.width=Math.max(a[2],26)+'%';e.textContent=a[1]+' '+f(a[2])})}
+$('#sb').addEventListener('input',sort);$('#ss').addEventListener('input',sort);sort();
+var G=[['Goa trip',64000,100000,'On track for 4 months'],['Wedding',420000,1000000,'On track for 14 months'],['New shop',250000,400000,'On track for 8 months']];
+function goal(i){var g=G[i],p=Math.round(g[1]/g[2]*100);$('#gname').textContent=g[0];$('#gring').style.setProperty('--v',p);$('#gpct').textContent=p+'%';$('#gsaved').textContent='₹'+inr(g[1]);$('#gtarget').textContent='₹'+inr(g[2]);$('#gnote').textContent=g[3]}
+$('#goals').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('#goals button').forEach(function(x){x.classList.toggle('on',x===b)});goal(+b.dataset.g)});
+var CC=[['#3d2ee0','#9a8cff'],['#191c1f','#4a5058'],['#0f7a5f','#6fd6b8'],['#c2561f','#ffb58a'],['#7a5b1c','#e8c673']];
+$('#sw').innerHTML=CC.map(function(c,i){return '<button class="'+(i?'':'on')+'" style="background:linear-gradient(135deg,'+c[0]+','+c[1]+')" aria-label="Card colour '+(i+1)+'"></button>'}).join('');
+$('#sw').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var i=$$('#sw button').indexOf(b);$$('#sw button').forEach(function(x){x.classList.toggle('on',x===b)});$('#vcard').style.setProperty('--c1',CC[i][0]);$('#vcard').style.setProperty('--c2',CC[i][1])});
+$('#ctab').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('#ctab button').forEach(function(x){x.classList.toggle('on',x===b)});$('#vkind').textContent=b.dataset.k==='v'?'Virtual card':'Physical card'});
+var IV=[['Nifty 50 ETF',245.2],['Large-cap fund',68.4],['Bluechip SIP',112.9],['Gold ETF',58.7],['Tech fund',134.3]];
+function inv(){$('#inv').innerHTML=IV.map(function(x){var c=(Math.random()-.45)*1.2;x[1]*=1+c/100;return '<div class="tx"><div>'+x[0]+'<i>₹'+x[1].toFixed(2)+'</i></div><span class="pill '+(c>=0?'up':'dn')+'">'+(c>=0?'+':'')+c.toFixed(2)+'%</span></div>'}).join('')}
+inv();setInterval(function(){if(!document.hidden&&!rm&&$('[data-view=personal]').classList.contains('on'))inv()},2600);
+
+/* chat helper */
+function chat(mEl,qEl,QA,cls){var busy=false;function add(c,t){var m=document.createElement('div');m.className=cls+' '+c;m.textContent=t;mEl.append(m);mEl.scrollTop=mEl.scrollHeight;return m}
+ qEl.innerHTML=QA.map(function(q,i){return '<button data-i="'+i+'">'+q[0]+'</button>'}).join('');add('q',QA[0][0]);add('a',QA[0][1]);
+ qEl.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||busy)return;var q=QA[+b.dataset.i];busy=true;add('q',q[0]);var m=add('a','');if(rm){m.textContent=q[1];busy=false;return}var i=0;(function t(){i+=2;m.textContent=q[1].slice(0,i);mEl.scrollTop=mEl.scrollHeight;if(i<q[1].length)setTimeout(t,16);else busy=false})()})}
+chat($('#msgs'),$('#qs'),[['Can I hire 2 people?','Yes. Two hires add ₹2.4 L a month. Your balance stays above ₹24 L for the next 12 weeks, as long as Kiran Textiles pays by the 14th.'],['Who owes me money?','₹6.9 L is overdue across 3 customers. Kiran Textiles owes ₹3.45 L and is 12 days late. I can send reminders to all three now.'],['What GST do I owe?','GSTR-3B is due in 6 days. Net GST payable is ₹62,300 and it is already set aside in your tax pot.'],['Why did cash dip in week 3?','Week 3 has ₹4.8 L of vendor payments to Sharma Steel and Patel Packaging. ₹3.1 L of receipts land in week 4.']],'m');
+chat($('#pm'),$('#pq'),[['How much on food?','You spent ₹9,420 on food this month, 12% less than last month.'],['Pay my rent','Rent of ₹22,000 is scheduled for the 1st. Want me to pay it now?'],['Am I saving enough?','You are saving 20% of your salary. Moving ₹3,000 more a month reaches your Goa trip goal a month sooner.']],'bubble');
+
+/* business flow panel */
+var FL=[['<div class="mini"><div style="display:flex;justify-content:space-between"><span>Sharma Steel</span><span>₹1,20,000</span></div><span class="mute">INV-2291 · due 14 Oct</span></div><div class="mini"><div style="display:flex;justify-content:space-between"><span>Patel Packaging</span><span>₹48,500</span></div><span class="mute">INV-0812 · due 18 Oct</span></div><div class="mini mute">Forward bills to pay@yourbusiness and they land here.</div>'],
+['<div class="mini"><div style="display:flex;justify-content:space-between"><span>Vendor</span><span class="up">Sharma Steel ✓</span></div><div style="display:flex;justify-content:space-between"><span>GSTIN</span><span class="up">Verified ✓</span></div><div style="display:flex;justify-content:space-between"><span>Amount</span><span class="up">₹1,20,000 ✓</span></div><div style="display:flex;justify-content:space-between"><span>GST 18%</span><span class="up">₹18,305 ✓</span></div></div><div class="mini mute">AI read the PDF and coded the expense.</div>'],
+['<div class="mini"><div style="display:flex;justify-content:space-between"><span>Pay Sharma Steel</span><span>₹1,20,000</span></div><span class="mute">Friday 10:00 · RTGS · runway 18 days</span></div><div class="ai" style="text-align:center">Approve payment</div>'],
+['<div class="mini"><div style="display:flex;justify-content:space-between"><span>Bank entry</span><span class="up">Matched ✓</span></div><div style="display:flex;justify-content:space-between"><span>Ledger</span><span class="up">Posted ✓</span></div><div style="display:flex;justify-content:space-between"><span>GST credit</span><span class="up">₹18,305 ✓</span></div><div style="display:flex;justify-content:space-between"><span>Accountant</span><span class="up">Notified ✓</span></div></div><div class="mini mute">Month-end closes itself.</div>']];
+function flow(i){var b=$('#fbody');b.style.animation='none';b.getBoundingClientRect();b.style.animation='fadeup .5s both';b.innerHTML=FL[i][0]}
+flow(0);$('#flow').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('#flow button').forEach(function(x){x.classList.toggle('on',x===b)});flow(+b.dataset.s)});
+var fi=0;setInterval(function(){if(document.hidden||rm||!$('[data-view=business]').classList.contains('on'))return;var el=$('#flow'),r=el.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight||el.dataset.touched)return;fi=(fi+1)%4;$$('#flow button').forEach(function(x,j){x.classList.toggle('on',j===fi)});flow(fi)},3500);
+$('#flow').addEventListener('click',function(){$('#flow').dataset.touched=1});
+
+/* chart */
+var W=720,H=320,L=44,R=16,T=16,B=32,N=13,svg=$('#chart');
+var SC={base:{v:[24.9,26.1,27.4,26.8,28.9,30.2,29.5,31.8,33.0,32.4,34.6,36.1,37.4],t:'Cash stays above ₹24.9 L and reaches ₹37.4 L in 12 weeks. Kiran Textiles paying on time is the main assumption.'},hire:{v:[24.9,25.4,25.9,24.6,25.2,25.9,24.8,25.6,26.3,25.1,26.0,26.8,27.5],t:'Two hires add ₹2.4 L a month. Your lowest balance is ₹24.6 L in week 3, so you can hire safely.'},late:{v:[24.9,23.8,22.4,20.9,21.5,19.8,18.6,19.9,18.2,17.5,18.8,17.1,16.4],t:'If customers pay 15 days late, cash falls to ₹16.4 L by week 12. Chasing the three overdue invoices (₹6.9 L) closes most of the gap.'}},cur='base';
+function X(i){return L+i*(W-L-R)/(N-1)}function Y(v){return T+(1-(v-10)/30)*(H-T-B)}
+function smooth(p){var d='M'+p[0][0].toFixed(1)+' '+p[0][1].toFixed(1);for(var i=0;i<p.length-1;i++){var p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)}return d}
+function drawChart(k,anim){var v=SC[k].v,up=v.map(function(a,i){return [X(i),Y(a+i*.28)]}),lo=v.map(function(a,i){return [X(i),Y(a-i*.28)]}).reverse(),mid=v.map(function(a,i){return [X(i),Y(a)]}),g='';
+ [10,20,30,40].forEach(function(t){g+='<line class="grid-l" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'"/><text x="'+(L-8)+'" y="'+(Y(t)+4)+'" text-anchor="end">'+t+'</text>'});
+ [0,2,4,6,8,10,12].forEach(function(i){g+='<text x="'+X(i)+'" y="'+(H-10)+'" text-anchor="middle">'+(i===0?'Today':'W'+i)+'</text>'});
+ var band=smooth(up)+' L'+lo[0][0].toFixed(1)+' '+lo[0][1].toFixed(1)+smooth(lo).replace(/^M[^C]*/,'')+'Z';
+ svg.innerHTML='<defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".22"/><stop offset="1" stop-color="var(--acc)" stop-opacity="0"/></linearGradient></defs>'+g+'<path d="'+band+'" fill="url(#cg)"/><path id="ln" d="'+smooth(mid)+'" fill="none" stroke="var(--acc)" stroke-width="3" stroke-linecap="round" pathLength="1"/><g id="hv" opacity="0"><line id="hl" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--mute)" stroke-dasharray="3 4"/><circle id="hc" r="6" fill="var(--bg)" stroke="var(--acc)" stroke-width="3"/></g><circle cx="'+mid[N-1][0]+'" cy="'+mid[N-1][1]+'" r="5" fill="var(--acc)"/>';
+ var ln=$('#ln');if(anim&&!rm){ln.style.strokeDasharray='1';ln.style.strokeDashoffset='1';ln.getBoundingClientRect();ln.style.transition='stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)';ln.style.strokeDashoffset='0'}$('#ins').textContent=SC[k].t}
+drawChart('base',false);
+$('#scn').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;cur=b.dataset.k;$$('#scn button').forEach(function(x){x.classList.toggle('on',x===b)});drawChart(cur,true)});
+svg.addEventListener('pointermove',function(e){var r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,i=Math.max(0,Math.min(N-1,Math.round((px-L)/((W-L-R)/(N-1))))),v=SC[cur].v[i],tip=$('#tip');$('#hv').setAttribute('opacity','1');$('#hl').setAttribute('x1',X(i));$('#hl').setAttribute('x2',X(i));$('#hc').setAttribute('cx',X(i));$('#hc').setAttribute('cy',Y(v));tip.style.left=(X(i)/W*100)+'%';tip.style.top=(Y(v)/H*r.height)+'px';tip.style.opacity=1;tip.innerHTML='<span class="mute">'+(i===0?'Today':'Week '+i)+'</span><b>₹'+v.toFixed(1)+' L</b><span class="mute">range ₹'+(v-i*.28).toFixed(1)+' to '+(v+i*.28).toFixed(1)+' L</span>'});
+svg.addEventListener('pointerleave',function(){$('#hv').setAttribute('opacity','0');$('#tip').style.opacity=0});
+
+/* feed */
+var EV=[['Reconcile','Matched 38 bank entries to invoices'],['Collect','Reminder sent to Kiran Textiles'],['Comply','GSTR-3B draft prepared'],['Protect','Blocked a duplicate ₹1,20,000 payment'],['Forecast','Runway updated to 7.2 months'],['Pay','Moved 3 bills to protect cash'],['Report','Weekly P&L sent to your accountant'],['Credit','New ₹15 L offer based on receipts']],ei=0,fd=$('#feed');
+function feed(){var e=EV[ei++%EV.length],l=document.createElement('li');l.innerHTML='<em>'+e[0]+'</em>'+e[1]+'<i>just now</i>';fd.prepend(l);while(fd.children.length>5)fd.lastChild.remove()}
+for(k=0;k<5;k++)feed();setInterval(function(){if(!document.hidden&&!rm)feed()},2600);
+
+/* calculators */
+function roi(){var n=+$('#iv').value,h=Math.round(n*10/60);$('#ivv').textContent=n.toLocaleString('en-IN');$('#roiH').textContent=inr(h);$('#roiR').textContent='₹'+inr(h*400*12)}$('#iv').addEventListener('input',roi);roi();
+function teen(){var a=+$('#al').value,s=+$('#as').value;$('#alv').textContent='₹'+inr(a);$('#asv').textContent=s+'%';$('#aw').textContent=Math.ceil(8000/(a*s/100))+' weeks'}$('#al').addEventListener('input',teen);$('#as').addEventListener('input',teen);teen();
+function invm(){var m=+$('#m1').value,c=+$('#m2').value,y=+$('#m3').value,p=+$('#m4').value,sh=+$('#m5').value;$('#m1v').textContent=inr(m);$('#m2v').textContent='₹'+c+' L';$('#m3v').textContent=y+'%';$('#m4v').textContent='₹'+p+' L';$('#m5v').textContent=sh+'%';
+ var r1=m*c*1e5*y/100/1e7,r2=m*p*1e5*12*.0015/1e7,r3=m*(sh/100)*999*12/1e7,t=r1+r2+r3,mx=Math.max(r1,r2,r3,.01),f=function(n){return '₹'+n.toFixed(1)+' Cr'};$('#mt').textContent=f(t);[['r1','Credit',r1],['r2','Payments',r2],['r3','Plans',r3]].forEach(function(a){var e=$('#'+a[0]);e.style.width=Math.max(a[2]/mx*100,22)+'%';e.textContent=a[1]+' '+f(a[2])})}
+['m1','m2','m3','m4','m5'].forEach(function(i){$('#'+i).addEventListener('input',invm)});invm();
+
+/* features */
+var F=[["Banking","Onboarding and KYC","Open a business account in minutes with digital KYC.","PAN, GST and Aadhaar verified. Account ready in 2 min."],["Banking","Current accounts","A business current account with a partner bank.","Balance ₹24,86,420 across 2 accounts."],["Banking","Payments and payouts","Pay vendors one by one or in bulk by UPI, NEFT and RTGS.","42 vendors paid in one approval."],["Banking","Payment collection","Collect with links, QR codes and virtual accounts.","₹3,45,000 received, matched to invoice #204."],["Banking","Invoicing and GST","Create GST invoices and send them with a pay link.","Invoice #205 sent. GST 18% calculated."],["Banking","Expense management","Capture bills and approve team spend in one place.","Receipt scanned: Travel ₹4,820, awaiting approval."],["Banking","Corporate cards","Issue virtual and physical cards with limits per person.","Card •••• 4821, limit ₹50,000 a month."],["AI CFO","Reconciliation","AI matches every bank entry to its invoice or bill.","412 of 415 entries matched. 3 need a look."],["AI CFO","Cash-flow forecasting","See your cash position weeks ahead.","Cash-positive for the next 7 months."],["AI CFO","Receivables","Track who owes you and chase them automatically.","Kiran Textiles is 12 days late. Reminder sent."],["AI CFO","Payables","Plan which bills to pay and when.","Pay Sharma Steel on Friday to keep 18 days of runway."],["AI CFO","Budgeting and variance","Set budgets and see where you are over or under.","Marketing is 14% over budget this month."],["AI CFO","Compliance and GST","Stay ahead of GST, TDS and filing dates.","GSTR-3B due in 6 days. Draft is ready."],["AI CFO","Reporting","Profit and loss, balance sheet and cash flow on demand.","Q2 report generated in 8 seconds."],["AI CFO","Anomaly detection","Alerts on duplicate, unusual or risky payments.","Duplicate payment of ₹1,20,000 blocked."],["Grow","Working capital and credit","Credit offers based on your real cash flow.","Pre-approved overdraft: ₹15,00,000."],["Grow","Insurance","Cover your stock, team and business in a few taps.","Stock cover quoted: ₹8,400 a year."],["Grow","Wealth management","Put surplus cash to work in funds and deposits.","₹5,00,000 idle. Suggested split ready."],["Grow","Algo trading","Run rule-based strategies on your own capital.","Strategy paused: daily loss limit reached."],["Grow","M&A and capital","Find buyers and investors with AI deal agents.","12 matched investors for your ₹4 Cr raise."]];
+var fcat='all',fsel=0,fg=$('#fg'),fdet=$('#fd');
+function drawF(){fg.innerHTML=F.map(function(f,i){return (fcat==='all'||f[0]===fcat)?'<button class="fi'+(i===fsel?' sel':'')+'" data-i="'+i+'"><b>'+(i+1)+'. '+f[1]+'</b><span>'+f[2]+'</span></button>':''}).join('');var f=F[fsel];fdet.innerHTML='<span class="chip">'+f[0]+'</span><h3 style="margin-top:14px">'+f[1]+'</h3><p class="mute" style="margin-top:10px">'+f[2]+'</p><div class="demo">'+f[3]+'</div>'}
+fg.addEventListener('click',function(e){var b=e.target.closest('.fi');if(b){fsel=+b.dataset.i;drawF()}});
+$('#ftabs').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;fcat=b.dataset.c;$$('#ftabs button').forEach(function(x){x.classList.toggle('on',x===b)});if(fcat!=='all'&&F[fsel][0]!==fcat)fsel=F.findIndex(function(f){return f[0]===fcat});drawF()});drawF();
+
+/* reveal + counters */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target)}})},{threshold:.08});
+var cio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){count(e.target);cio.unobserve(e.target)}})},{threshold:.4});
+function count(el){var to=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'',t0=performance.now();if(rm){el.textContent=pre+to+suf;return}(function s(t){var p=Math.min(1,(t-t0)/1300),e=1-Math.pow(1-p,3);el.textContent=pre+Math.round(to*e)+suf;if(p<1)requestAnimationFrame(s)})(t0)}
+function prep(view){var v=$('[data-view='+view+']');$$('[data-rv]',v).forEach(function(el){if(el.getBoundingClientRect().top>innerHeight*.92&&!rm){el.classList.add('pre');io.observe(el)}});setTimeout(function(){$$('.pre').forEach(function(x){x.classList.remove('pre')})},4000);
+ $$('.cnt',v).forEach(function(el){var to=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'';el.textContent=pre+to+suf;if(!el.dataset.done&&!rm){el.dataset.done=1;if(el.getBoundingClientRect().top>innerHeight*.85){el.textContent=pre+'0'+suf;cio.observe(el)}else count(el)}});
+ var tlx=$('#tl');if(tlx&&view==='investors'){$$('.d',tlx).forEach(function(d){d.classList.remove('on')});tlx.style.setProperty('--p','0%');new IntersectionObserver(function(es,o){if(es[0].isIntersecting){tlx.style.setProperty('--p','88%');$$('.d',tlx).forEach(function(d,i){setTimeout(function(){d.classList.add('on')},i*330)});o.disconnect()}},{threshold:.5}).observe(tlx)}}
+
+
+/* personal products */
+var PR=[
+['bank-account','Accounts','Bank Account','A free account that sorts your money for you.','Open in about two minutes with digital KYC','Pay by UPI, card or bank transfer','Spaces split your salary into bills, savings and spending','₹0','account fees','Salary','+₹85,000','Rent','−₹22,000','Savings vault','+₹17,000'],
+['joint-account','Accounts','Joint Account','Share bills and goals with a partner or family.','Two owners, one balance, separate cards','See who paid what, as it happens','Shared goals for rent, trips and big buys','2 owners','one shared balance','Groceries','−₹3,200','Rent split','−₹11,000','Trip goal','+₹5,000'],
+['professional-account','Accounts','Professional Account','Keep freelance income apart from personal money.','GST invoices with payment links','Tax set aside from every receipt','A clean statement to share with your accountant','18%','GST set aside automatically','Invoice #31 paid','+₹48,000','GST reserved','−₹7,322','Software','−₹1,499'],
+['savings-account','Accounts','Savings Account','Vaults that pay interest every day.','Instant access, no lock-in','Goals with a progress ring','Round up every payment into a vault','Daily','interest, paid every day','Goa trip vault','+₹38','Round-ups','+₹212','Emergency fund','₹90,000'],
+['teen-account','Accounts','For ages 16-17','A first account with a card and parent oversight.','A card of their own, with spending limits','Learn to save with goals and pocket money','Parents see every payment','₹500','weekly pocket money','Pocket money','+₹500','Book store','−₹320','Cycle fund','43%'],
+['parents','Accounts','Parents and guardians','Stay in the loop without taking over.','Set limits and lock the card in one tap','Top up instantly and schedule pocket money','A notification for every payment','1 tap','to freeze a card','Limit today','₹800','Top-up','+₹1,000','Card','Active'],
+['cards','Smart Spending','Cards','Virtual and physical cards for every kind of spend.','Create a virtual card in seconds','Add it to your phone wallet and pay right away','Lock, unlock and set limits in the app','•••• 4821','virtual card','Online limit','₹50,000','Contactless','On','Subscriptions','3 cards'],
+['send-receive','Smart Spending','Send & Receive','Move money by UPI or bank transfer in seconds.','Pay anyone by UPI ID, phone number or QR','Request money with a link','Split a bill with friends','UPI','send, scan and request','To Asha','−₹1,200','From Ravi','+₹850','Split dinner','₹3,600'],
+['money-management','Smart Spending','Money Management','See where your money goes and plan the month.','Every payment sorted into a category','Budgets that warn you before you overspend','Ask ONIX AI about any spending','12%','less on food this month','Food','₹9,420','Travel','₹3,100','Bills','₹22,000'],
+['rewards','Smart Spending','ONIX Points','Earn points on every purchase.','Points on card spend, more on higher plans','Redeem for travel and shopping rewards','Bonus points with partner brands','3x','points on Premium','This month','+1,240','Redeemed','−500','Balance','4,860'],
+['linked-accounts','Smart Spending','Linked Accounts','See all your bank accounts in one place.','Connect other banks with your consent','One view of balances and spending','Disconnect any time','3 banks','linked with consent','Savings ··2210','₹48,200','Salary ··9087','₹1,12,400','Credit card','−₹14,300'],
+['protect','Security & Protection','How we protect your money','Safety checks run on every payment.','Fraud checks before money leaves your account','Biometric login and device binding','Instant card lock from the app','24/7','fraud monitoring','Payment check','Passed','Device','Verified','Card','Unlocked'],
+['lost-device','Security & Protection','Report lost device','Lock your account from anywhere.','Sign in on the web to lock the old device','Cards freeze at once','Restore your account on a new phone after verification','1 min','to lock everything','Old phone','Locked','Cards','Frozen','New phone','Verifying'],
+['security-report','Security & Protection','Fraud and scam guide','Know the scams before they reach you.','Plain-language guides to common scams','Warnings in the app when a payment looks risky','Report a scam in a few taps','Warn','before you pay','Unknown payee','Review','New device','Blocked','Report','Open'],
+['stocks','Investments','Stocks','Buy and sell stocks from the same app.','Start with ₹100 using fractional investing','Watchlists and price alerts','Fees shown before you confirm. Capital at risk','₹100','to start','Order','Buy 2 units','Fee','₹20','Status','Filled'],
+['mutual-funds','Investments','Mutual funds and SIPs','Invest every month without thinking about it.','Start a SIP from ₹500','Pick a goal and let AI suggest a mix','Pause or stop any time. Capital at risk','₹500','SIP from','SIP date','5th monthly','Next debit','₹5,000','Goal','Retirement'],
+['commodities','Investments','Gold and commodities','Add gold to your savings.','Buy digital gold in small amounts','Track the price in the app','Sell any time. Capital at risk','₹10','to start','Gold','0.5 g','Value','₹3,400','Change','+0.8%'],
+['crypto','Crypto','Crypto','Planned, and subject to Indian regulation.','Offered only where the rules allow','Join the waitlist for updates','Clear risk warnings before any purchase','Soon','regulatory approvals needed','Status','Planned','Waitlist','Open','Region','India',1],
+['on-ramp','Crypto','Crypto on-ramp','Planned. Add funds to wallets you already use.','Offered only where the rules allow','Join the waitlist for updates','Clear fees before you confirm','Soon','regulatory approvals needed','Status','Planned','Waitlist','Open','Region','India',1],
+['pro-trading','Crypto','ONIX Pro trading','Planned. An advanced trading screen.','Charts and order types for experienced traders','Offered only where the rules allow','Join the waitlist for updates','Soon','regulatory approvals needed','Status','Planned','Waitlist','Open','Region','India',1],
+['mobile-plans','Mobile & Connectivity','Mobile plans','Recharge and pay mobile bills from the app.','Recharge any number in seconds','Auto-recharge before your plan runs out','Track data and validity','₹299','plan renews 14 Oct','Recharge','−₹299','Data left','1.2 GB','Validity','9 days'],
+['data-plans','Mobile & Connectivity','Data plans','Stay online when you travel.','Buy a travel data plan before you fly','Set up an eSIM in the app','Top up abroad without roaming surprises','eSIM','for travel','Region','Singapore','Data','5 GB','Valid','7 days'],
+['intl-transfers','Global Finances','International transfers','Send money abroad at clear rates.','See the rate and fee before you send','Track every transfer to the last step','Within RBI limits and purpose rules','Clear','rate and fee up front','Send','₹1,00,000','Fee','₹350','Arrives','Today'],
+['bnpl','Borrow and build credit','Buy now, pay later','Split a purchase into easy instalments.','Pay in 3 or more instalments at checkout','Clear cost shown before you confirm','Pay early any time, with no hidden fees','3 parts','interest-free option','Purchase','₹12,000','Today','₹4,000','Then','2 x ₹4,000'],
+['personal-loans','Borrow and build credit','Personal loans','Instant loans with a clear price.','Offers in minutes, based on your real spending','Pick the amount and term yourself','Through lending partners','₹5 L','pre-approved','Amount','₹2,00,000','Term','24 months','Rate','Shown up front'],
+['credit-score','Borrow and build credit','Credit score and builder','Check your score free and improve it.','Free score check with simple reasons','Credit-builder plan that reports on-time payments','Alerts when something changes','+42','points in 6 months','Score','768','Utilisation','18%','On-time','100%'],
+['salary-advance','Borrow and build credit','Early pay','Get part of your salary before payday.','Advance up to a share of earned pay','No interest for eligible salary accounts','Repaid automatically on payday','₹15,000','available now','Available','₹15,000','Fee','₹0','Repays','On payday'],
+['virtual-cards','Smart Spending','Virtual and disposable cards','Safer online shopping with throwaway cards.','Create a card in seconds','One-time cards that expire after a single payment','Lock, limit or delete any card','3 sec','to create a card','Type','Disposable','Limit','₹5,000','Status','Active'],
+['subscriptions','Smart Spending','Subscription manager','See every subscription and cancel in a tap.','All recurring payments found automatically','Alerts before a renewal or price rise','Cancel or pause from the app','₹2,340','saved a month','Active','11','Next','Streaming, Fri','Saved','₹2,340'],
+['split-bills','Smart Spending','Split bills and groups','Share costs with friends and flatmates.','Split any payment from your history','Group pots for trips and house costs','Request and settle in one tap','4','people, one bill','Dinner','₹3,200','Your share','₹800','Status','Settled'],
+['pots','Smart Spending','Pots and round-ups','Save without thinking about it.','Round up every card spend to a pot','Goal pots for trips, gadgets and emergencies','Auto-save on payday','₹4,860','saved with round-ups','Pot','Goa trip','Round-ups','₹420','Goal','₹60,000'],
+['offers','Smart Spending','Cashback and offers','Real rewards on spends you already make.','Offers matched to where you shop','Cashback paid straight to your balance','No coupons to hunt for','5%','cashback on top brands','Offer','Groceries','Cashback','5%','Paid','Instantly'],
+['bill-pay','Smart Spending','Bills and credit card payments','Pay every bill from one place.','Electricity, rent, broadband and cards','Auto-pay with reminders before due dates','Rewards on eligible bill payments','9 bills','in one view','Due','₹6,420','Auto-pay','On','Next','Mon'],
+['fixed-deposits','Investments','Fixed deposits','Lock in a rate for a fixed term.','Compare rates from partner banks','Open and break deposits in the app','Ladder deposits for steady income','7.4%','example rate','Amount','₹1,00,000','Term','12 months','Rate','Shown up front'],
+['retirement','Investments','Retirement and NPS','Build a pension pot that grows with you.','Open and top up in a few taps','Simple allocation choices with AI help','Tax benefits explained clearly','60','target retirement age','Monthly','₹5,000','Mix','Balanced','Tax saved','Shown'],
+['insurance-personal','Protect and plan','Insurance for you','Health, term, motor and travel cover.','Compare plans from licensed insurers','Buy and renew in minutes','File and track claims in the app','4 types','of cover','Health','₹10 L','Term','₹1 Cr','Premium','Shown up front'],
+['ai-coach','Protect and plan','AI money coach','Ask anything about your money.','Plain answers about your spending and goals','Nudges before you overspend','Plans for debt, savings and big purchases','24x7','AI answers','Ask','Can I afford a car?','Answer','Yes, with a plan','Next','Set a goal'],
+['forex-card','Global Finances','Travel and forex card','Spend abroad at the real rate.','Hold and spend 20+ currencies','No markup on the exchange rate','Lounge access and travel insurance on premium plans','20+','currencies','Rate','Mid-market','Markup','0%','ATM','Free limit']];
+var BR=[
+['banking-connectivity','Connect and move money','Banking connectivity','Connect every bank account you already have.','Link accounts from other banks with your consent','Live balances and transactions in one place','Bank-grade APIs for your ERP and apps','5 banks','linked with consent','Current ··4410','₹12,40,000','Overdraft ··2210','−₹3,10,000','Escrow ··9087','₹6,80,000'],
+['payments','Connect and move money','Payments','Pay anyone, any way, with one approval.','UPI, NEFT, RTGS, IMPS and SWIFT from one screen','Bulk payouts and scheduled payments','Approvals and limits before money moves','1 approval','for every payment','Sharma Steel','−₹1,20,000','Bulk payout','42 vendors','Status','Settled'],
+['collections','Connect and move money','Collections','Get paid faster and know who paid.','Payment links, QR codes and virtual accounts','Every receipt matched to the right invoice','Automatic reminders for late payers','₹3.45 L','collected today','Invoice #204','+₹3,45,000','Virtual account','+₹1,80,000','Reminder','Sent'],
+['treasury','Connect and move money','Treasury','Manage cash across accounts and put idle money to work.','See cash across every account in one view','Sweep idle cash into interest-earning options','Forecast and plan your liquidity','₹24.9 L','across 4 accounts','Operating','₹12,40,000','Reserve','₹8,00,000','Earning','+₹130 today'],
+['spend-management','Connect and move money','Spend management','Control every rupee your team spends.','Cards, expenses and bills in one place','Budgets and approvals before spend happens','Receipts matched automatically','₹3.1 L','spent this month, on budget','Marketing','₹1,20,000','Travel','₹62,000','Software','₹38,000'],
+['accounting-gl','Run your finance','Accounting and GL','Books that keep themselves.','Every transaction posted to the general ledger','Chart of accounts, journals and trial balance','Export to Tally, Zoho Books or your accountant','Auto','ledger posting','Journal #881','Posted','Trial balance','Balanced','Period','Open'],
+['ap-ar','Run your finance','AP and AR','Bills you owe and invoices owed to you, together.','AI reads and codes every bill','Ageing reports for payables and receivables','Reminders and payment runs on autopilot','₹6.9 L','overdue receivables','Payables due','₹4,20,000','Receivables due','₹9,80,000','Overdue','₹6,90,000'],
+['tax','Run your finance','Tax','GST, TDS and income tax without the scramble.','Tax set aside from every receipt','Returns drafted for your accountant to approve','A calendar of every due date','6 days','to GSTR-3B','GST payable','₹62,300','TDS','₹18,400','Status','Draft ready'],
+['payroll-core','Run your finance','Payroll','Run salaries on time, every month.','Salaries paid on the date you choose','PF, ESI and TDS calculated and filed','Payslips and reimbursements in the app','18','people paid on the 1st','Net salaries','−₹6,40,000','PF and ESI','−₹82,000','TDS','−₹41,000'],
+['ai-cfo','Run your finance','AI CFO','A finance chief that never logs off.','Reconciles, forecasts and flags risks all day','Answers questions about your numbers in plain language','Acts with your approval: chase, pay, file','24/7','on your live bank data','Reconciled','412 entries','Forecast','Cash-positive 12 wks','Next action','Chase 3 invoices'],
+['fleet-management','Run your finance','Fleet management','Fuel, tolls and vehicle costs for every vehicle in one place.','Fuel and FASTag cards with limits per vehicle','Track trip, driver and vehicle-wise spend','Maintenance, insurance and EMI reminders','1 view','of every vehicle cost','Fuel this month','₹2,40,000','Tolls','₹38,000','Vehicles','24 active'],
+['lending','Fund and protect','Lending and credit','Working capital from your real cash flow.','Offers based on receipts, not collateral','Overdraft, invoice financing and term loans','Funds in days. Offered through lending partners','₹15 L','pre-approved','Overdraft','₹15,00,000','Invoice financing','₹8,00,000','Rate','Shown up front'],
+['sme-finance','Fund and protect','SME finance','Business loans built for small and medium enterprises.','Term loans, working capital and machinery finance','One application, offers from several lenders','Decisions from your cash-flow data, not paperwork','₹50 L','up to','Working capital','₹10,00,000','Term loan','₹50,00,000','Rate','Shown up front'],
+['invoice-discounting','Fund and protect','Invoice discounting','Get paid today for invoices due in 30 to 90 days.','Upload or sync an invoice and see an advance offer','Up to 90% of invoice value, paid within a day','You repay when your customer pays. Through lending partners','90%','advance','Invoice','₹4,00,000','Advance today','₹3,60,000','Fee','Shown up front'],
+['ai-accounting','Fund and protect','AI Accounting','Books that keep themselves, with no manual entry.','AI reads bills and receipts and posts the entries','Bank feeds matched and categorised automatically','GST-ready books and live profit and loss','98%','auto-categorised','Entries posted','1,240','Needs review','12','Books closed','In 2 days'],
+['m-and-a','Corporate finance','M&A','Buy, sell or merge with the right counterparty.','AI scouts targets and buyers for you','Teaser, outreach and negotiations tracked','Delivered with registered partners where required','12','matched counterparties','Mandate','Sell-side','Buyers','12 matched','Stage','Outreach'],
+['capital-raising','Corporate finance','Capital raising','Find the investors who fit your round.','Match with angels, VCs and lenders','Pitch deck and outreach managed in one place','Delivered with registered partners where required','₹4 Cr','raise in progress','Round','Seed','Investors','12 matched','Meetings','3 booked'],
+['valuation','Corporate finance','Valuation','Know what your business is worth.','Valuation built from your live financials','Methods compared side by side','A report ready to share with investors','₹38 Cr','indicative midpoint','Method','DCF and comps','Range','₹32 to 44 Cr','Updated','Today'],
+['data-room','Corporate finance','Data room','A secure room for due diligence.','Documents organised and permissioned','See who viewed what and when','Q and A with investors in one place','1 room','for every deal','Documents','148','Viewers','6','Q and A','4 open'],
+['ai-investment-banker','Corporate finance','AI investment banker','AI agents that run the deal process.','Deal scout, valuation and due diligence agents','Strategy and outreach drafted for your review','Regulatory checks along the way','6 agents','working on your deal','Deal Scout','Active','Valuation','Done','Due diligence','Running'],
+['foreign-accounts','Essentials','Foreign currency accounts','Hold and receive USD, EUR and GBP for exports and imports.','Receive foreign payments with clear fees','Hold balances in major currencies','Pay overseas suppliers from the same account','3 currencies','USD, EUR and GBP','Received','+$4,200','Held','€2,150','Paid supplier','−£900'],
+['transfers','Essentials','Transfers','UPI, NEFT, RTGS and SWIFT from one screen.','Pick the fastest rail for each payment','Bulk payouts from a spreadsheet','Track every transfer to the last step','4 rails','UPI, NEFT, RTGS, SWIFT','Sharma Steel','−₹1,20,000','Bulk payout','42 vendors','Status','Settled'],
+['exchange','Essentials','Currency exchange','Convert between rupees and major currencies at clear rates.','See the rate and fee before you convert','Set a target rate and convert when it hits','Every conversion tagged for your books','Clear','rate and fee up front','USD to INR','Rate shown','Fee','₹350','Alert','Target set'],
+['forex-forwards','Essentials','Forex forwards','Lock a rate today for a payment due later.','Fix the rate for imports and exports','Choose a settlement date within the allowed tenor','Subject to bank partner and RBI rules','Lock','a rate for later','Locked rate','Agreed','Settles','15 Jan','Amount','$20,000'],
+['accept-payments','Merchant','Accept payments','Take UPI, cards and wallets with one setup.','One account for every way customers pay','Payments matched to invoices automatically','Settlement into your ONIX account','1 setup','UPI, cards and wallets','Order #1042','+₹2,499','UPI','+₹640','Card','+₹5,200'],
+['in-person','Merchant','In-person payments','QR codes and card machines for your shop.','A QR code on the counter in minutes','Card machine with instant settlement alerts','Daily sales summary in the app','QR','on your counter','Today','₹18,420','Sales','64','Avg ticket','₹288'],
+['online-payments','Merchant','Online payments','A checkout for your website or app.','Hosted checkout or an API for developers','UPI, cards, netbanking and wallets','Refunds and disputes from the dashboard','1 API','for every method','Checkout','+₹1,299','Refund','−₹499','Method','UPI'],
+['onix-pay','Merchant','ONIX Pay','One-tap checkout for returning customers.','Customers pay with their ONIX account','Fewer steps at checkout','Funds reach you on the same day','1 tap','to pay','Cart','₹2,999','Pay with','ONIX','Status','Paid'],
+['corporate-cards','Spend management','Corporate cards','Cards for every person and every purchase.','Virtual and physical cards in minutes','Limits by person, team or category','Receipts attached from your phone','10 cards','on the Growth plan','Marketing','₹50,000 limit','Travel','₹25,000 limit','Software','₹10,000 limit'],
+['expenses','Spend management','Expenses','Snap the receipt and move on.','Receipts captured and matched to card spend','Approvals routed to the right manager','Reimburse employees by UPI','Snap','and it is filed','Taxi ₹420','Approved','Hotel ₹4,820','Pending','Lunch ₹640','Matched'],
+['bills','Spend management','Bills','Pay vendor bills on time, every time.','Upload or forward a bill and AI reads it','Pick the pay date that protects your cash','GST and TDS handled with the payment','AI','reads every bill','Sharma Steel','₹1,20,000','Due','14 Oct','Status','Scheduled'],
+['procurement','Spend management','Procurement and approvals','Approve spending before it happens.','Purchase requests with budgets attached','Approval chains by amount and department','Every approval kept for audit','3 steps','request, approve, pay','Request','₹85,000','Approver','Finance head','Status','Approved'],
+['business-savings','Treasury','Business savings','Put idle cash to work and keep it available.','Interest on balances above a level you set','Withdraw any time','Earnings shown next to your cash forecast','Auto','sweep of idle cash','Idle cash','₹8,00,000','Earned today','+₹130','Kept free','₹5,00,000'],
+['business-crypto','Treasury','Business crypto','Planned, and subject to Indian regulation.','Offered only where the rules allow','Join the waitlist for updates','Clear risk warnings and tax records','Soon','regulatory approvals needed','Status','Planned','Waitlist','Open','Region','India',1],
+['ai-forecasting','AI CFO','Cash-flow forecasting','See your cash 90 days out.','Scenarios for hiring, late payments and big buys','Hover any week for the balance and range','Alerts before cash gets tight','90 days','of forward view','Week 3','₹24.6 L','Week 12','₹27.5 L','Low point','₹24.6 L'],
+['ai-reconciliation','AI CFO','Reconciliation','Every bank entry matched to its invoice or bill.','Entries matched as they arrive','Exceptions flagged with a suggested fix','Books ready for your accountant','412/415','entries matched','Matched','412','Need a look','3','Time saved','11 hrs'],
+['analytics','Platform','Analytics and reporting','Reports that explain themselves.','Profit and loss, cash flow and balance sheet on demand','Filter by team, project or customer','Share with your accountant in one tap','8 sec','to generate a report','Revenue','₹42.5 L','Expenses','₹31.2 L','Margin','26%'],
+['apis','Platform','APIs','Build ONIX payments and accounts into your own product.','Payments, collections and account data over API','Webhooks for every status change','A sandbox to test before you go live','REST','with webhooks','POST /payouts','201','Webhook','payout.settled','Mode','Sandbox'],
+['integrations','Platform','Integrations','Connect the tools you already use.','Accounting tools like Tally and Zoho Books','ERP and payroll connections','Two-way sync, no re-typing','Sync','with your accounting tool','Tally','Connected','Zoho Books','Connected','ERP','Pending'],
+['business-security','Platform','Security and controls','Control who can do what.','Roles and limits for every user','Approvals for large payments','A full audit log of every action','Roles','and approval limits','Admin','Full access','Accountant','View only','Approver','Up to ₹5 L'],
+['people','Services','Performance and HR','Keep your team organised in one place.','Employee records and documents','Leave, attendance and reviews','Connected to payroll','1 place','for your people','Team','18','On leave','2','Reviews due','4'],
+['pos','Services','Point of Sale','A billing screen for shops and restaurants.','Billing, inventory and GST invoices','Works with QR and card machines','Daily sales synced to your books','POS','billing and inventory','Bill #881','₹1,240','GST','₹189','Stock low','3 items'],
+['insurance','Services','Insurance','Cover your stock, team and business in a few taps.','Quotes for stock, property, health and liability cover','Compare plans and buy in minutes','Offered through licensed insurance partners','₹8,400','stock cover, quoted per year','Stock cover','₹8,400 a year','Group health','18 people','Claim','In review'],
+['wealth','Services','Wealth management','Put surplus business and personal cash to work.','AI suggests a split across funds and deposits','Keep working capital safe and invest the rest','Through registered partners. Capital at risk','₹5 L','surplus cash found','Idle cash','₹5,00,000','Suggested','60% debt, 40% equity','Next review','Monthly'],
+['asset-management','Services','Asset management','Professionally managed portfolios for surplus business and promoter wealth.','Mandates built around your goals and risk','Reports and performance in one view','Through registered partners. Capital at risk','₹1 Cr','typical minimum','Style','Goal-based','Reporting','Monthly','Fees','Shown up front'],
+['pre-ipo','Investments','Pre-IPO and private markets','Invest in unlisted companies before they list.','Curated pre-IPO and private-market deals','Minimums, lock-ins and risks shown up front','Through registered partners. Capital at risk','₹10 L','typical minimum','Stage','Pre-IPO','Lock-in','Shown per deal','Access','Via partners'],
+['angel-investing','Investments','Angel investing','Back early-stage founders alongside experienced angels.','Browse vetted startup deals','Syndicate with other investors on one cap table','Through registered partners. High risk, illiquid','₹25 L','typical cheque','Stage','Seed','Structure','Syndicate','Diligence','AI summary'],
+['global-markets','Investments','Global capital markets','Reach international stocks, bonds and funds from your business account.','Invest in global equities, ETFs and bonds','See FX cost before you commit','Through registered partners and subject to RBI rules','40+','markets','Route','Via partners','FX rate','Shown up front','Limits','Per RBI rules'],
+['consulting','Services','Consulting','Finance and growth advice from experts, backed by your data.','Book an expert review of your numbers','CFO, tax and compliance advice on call','Reports prepared from your live ONIX data','1 call','to review your finances','Session','CFO review','Duration','45 min','Report','Included'],
+['virtual-cards-biz','Spend management','Virtual cards for teams','A card for every vendor, project or person.','Issue unlimited virtual cards instantly','Limits, merchants and expiry per card','Lock one subscription without touching others','Unlimited','virtual cards','Cards','48','Limit','₹1,00,000','Vendor','Locked'],
+['travel','Spend management','Travel and expenses','Book, approve and reconcile trips in one flow.','Book flights and stays inside company policy','Approvals and per-diems built in','Receipts matched to the booking automatically','1 flow','booking to books','Trip','Delhi to Mumbai','Policy','In policy','Status','Approved'],
+['savings-insights','Spend management','Savings insights','Find cost savings you would have missed.','Spot duplicate tools and unused licences','Flag price rises and better-priced vendors','Benchmark what you pay against similar firms','₹4.2 L','found a year','Duplicate tools','6','Unused seats','31','Savings','₹4.2 L'],
+['payment-links','Merchant','Payment links and QR','Get paid from a link, a chat or a QR code.','Share by WhatsApp, SMS or email','Reusable QR for the counter','Auto-reminders for unpaid links','30 sec','to your first link','Link','₹12,500','Status','Paid','Method','UPI'],
+['subscription-billing','Merchant','Invoicing and subscriptions','Recurring billing without chasing anyone.','Invoices, mandates and auto-debit','Plans, trials and usage-based pricing','Failed payments retried automatically','92%','collected on time','MRR','₹8,40,000','Failed','3%','Recovered','2%'],
+['virtual-accounts','Merchant','Virtual accounts','A unique account for every customer.','Every payment matched to its customer','Works with UPI, NEFT, RTGS and IMPS','Reconciled in real time','100%','auto-matched','Accounts','1,200','Matched','100%','Delay','Real time'],
+['payouts','Merchant','Payouts and mass payments','Pay vendors, partners and gig workers in bulk.','Upload a sheet or call the API','UPI, bank and wallet payouts','Status and retries tracked for you','10,000','payouts in one batch','Batch','2,400','Success','99.2%','Time','Minutes'],
+['stablecoin-payments','Merchant','Stablecoin payments','Planned, and subject to Indian regulation.','Cross-border settlement in digital dollars','Instant settlement outside banking hours','Will launch only where permitted','Soon','regulatory approvals needed','Status','Planned','Waitlist','Open','Region','India',1],
+['budgeting','Run your finance','Budgeting and FP&A','Plan, track and explain the numbers.','Budgets by team, project and month','Actuals against plan, updated live','AI explains why numbers moved','12 mo','rolling plan','Budget','₹40 L','Actual','₹36 L','Variance','-9%'],
+['e-invoicing','Run your finance','E-invoicing and e-way bills','Stay compliant with GST in a few clicks.','E-invoices with IRN and QR','E-way bills from the same invoice','Returns data ready to file','1 click','to a compliant invoice','E-invoice','Generated','E-way bill','Ready','GSTR-1','Draft'],
+['global-hiring','Run your finance','Global hiring and contractors','Hire and pay people in any country.','Employer of record for full-time hires','Contractor contracts and payouts','Local tax and benefits handled','100+','countries (through partners)','Hires','4','Countries','3','Payroll','Local'],
+['cap-table','Run your finance','Cap table and ESOP','Track ownership and employee equity.','Live cap table with every round','Grant, vest and exercise options','Investor-ready reports','1 view','of who owns what','Founders','62%','ESOP pool','10%','Investors','28%'],
+['company-compliance','Run your finance','Company registration and compliance','Set up and stay compliant from day one.','Register a company and get your GST','Reminders for ROC and tax filings','Experts available for tricky cases','7 days','typical setup','Registration','In progress','Next filing','Reminder set','Experts','On call'],
+['rbf','Fund and protect','Revenue-based financing','Funding that repays as a share of sales.','Offers based on your sales data','Repay a fixed share of daily revenue','No equity given up. Through lending partners','₹25 L','example limit','Funding','₹25,00,000','Repay','8% of sales','Fee','Shown up front'],
+['supply-chain-finance','Fund and protect','Supply chain finance','Pay suppliers early and keep your cash.','Suppliers get paid in days','You pay on your usual terms','Through lending partners','45 days','earlier payments','Supplier','Paid today','You pay','Day 60','Cost','Shown up front'],
+['b2b-bnpl','Fund and protect','B2B buy now, pay later','Offer your business customers credit terms.','Net-30 to net-90 terms for buyers','You get paid up front','Credit checks done for you','Net 60','example term','Order','₹6,00,000','You receive','Today','Buyer pays','60 days'],
+['credit-report','Fund and protect','Business credit score','Know where you stand before you apply.','Check your business credit health','See what lenders see','Steps to improve your score','742','example score','Score','742','Utilisation','31%','Payments','On time'],
+['baas','Platform','Embedded finance and banking as a service','Add accounts, cards and payments to your own product.','Launch accounts and cards through ONIX APIs','Compliance and KYC handled for you','Revenue share on every transaction','4 weeks','typical launch','Accounts','API','Cards','API','KYC','Included'],
+['kyc','Platform','KYC and business onboarding','Verify customers and businesses in minutes.','Aadhaar, PAN, GST and video KYC','Business verification and UBO checks','Audit trail for every check','< 2 min','to verify','PAN','Verified','GST','Verified','Video KYC','Done'],
+['fraud-risk','Platform','Fraud and risk','Stop bad payments before they happen.','Real-time scoring on every transaction','Rules you can change yourself','Chargeback and dispute handling','0.02%','example fraud rate','Scored','1.2 M','Blocked','412','Review','18'],
+['agent-payments','Platform','Agent payments','Let AI agents pay within limits you set.','Cards and wallets for AI agents','Spend limits, approvals and audit logs','Planned, subject to regulation','Soon','planned','Status','Planned','Waitlist','Open','Region','India',1]];
+var SR=[
+['startups','By size','Startups','Banking, cards and AI CFO from day one.','Open an account and start spending in minutes','Founder cards, GST and TDS set up for you','Investor-ready reports without a finance hire','10 min','to get started','Account','Ready today','Cards','Issued instantly','Reports','Investor-ready'],
+['small-business','By size','Small business','Everything a shop or small firm needs in one app.','UPI, cards and invoices in one place','Books that update as you sell','Working capital from your real cash flow','1 app','for the whole business','Collections','UPI and cards','Books','Auto-updated','Credit','Through partners'],
+['mid-market','By size','Mid-market','Control spend and close the books faster as you grow.','Approvals, budgets and limits by team','Multi-entity books and bank connectivity','AI forecasting and 90-day cash view','5x','faster month-end close','Entities','Multiple','Approvals','By team','Forecast','90 days'],
+['enterprise','By size','Enterprise','Treasury, payments and controls at scale.','Treasury, bulk payouts and ERP integrations','Role-based access, audit trails and SSO','Dedicated support and custom workflows','24x7','dedicated support','Treasury','Centralised','Payouts','Bulk','Controls','Audit-ready'],
+['applied-ai','By size','Applied AI solutions','Bespoke transformations for finance teams.','Custom AI agents built around your processes','Reconciliation, close and reporting automation','Our team works with yours from design to launch','Custom','built with your team','Scope','Defined with you','Agents','Built for you','Support','Hands-on'],
+['architecture','By industry','Architecture and engineering','Built for project-based billing and milestone payments.','Milestone invoices and retention tracking','Project-wise cost and margin views','Pay subcontractors on schedule','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['construction','By industry','Construction','Built for site spend and subcontractor payments.','Site-wise cards and cash limits','Pay vendors and labour on time','Track project cash flow','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['ind-consulting','By industry','Consulting','Built for time-based billing and expense claims.','Invoice clients and chase payments','Expense claims with receipt capture','Utilisation and revenue views','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['education','By industry','Education','Built for fee collection and payouts.','Collect fees by UPI, card and mandate','Automatic receipts and reminders','Pay staff and vendors in one run','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['healthcare','By industry','Healthcare','Built for patient payments and supplier spend.','Collect at the counter and online','Pay suppliers and staff on time','Spend limits by department','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['legal','By industry','Legal','Built for client billing and expense recovery.','Invoice and collect from clients','Track and recover case expenses','Clear client and firm books','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['life-sciences','By industry','Life sciences','Built for grant, lab and supplier spend.','Budgets by project and lab','Pay global suppliers in many currencies','Audit-ready records','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['nonprofits','By industry','Nonprofits','Built for donations and fund tracking.','Collect donations online','Track spend by fund and project','Reports for donors and auditors','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['public-sector','By industry','Public sector','Built for controlled spend and transparent reporting.','Approval chains and spend limits','Full audit trail for every payment','Reports for oversight','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['retail','By industry','Retail','Built for store payments and daily settlement.','UPI, cards and QR at every counter','Daily settlement and reconciliation','Inventory-linked billing','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['sports','By industry','Sports','Built for team, event and sponsorship money.','Cards for staff and travel','Collect ticket and sponsor revenue','Budgets by team and event','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated'],
+['technology','By industry','Technology','Built for global teams, SaaS spend and runway.','Control SaaS and cloud spend','Pay global teams and contractors','Runway and burn forecasts','1 app','for the whole team','Setup','Same day','Reports','Live','Support','Dedicated']
+];
+var PD={},G={personal:[],business:[],solutions:[]},CI={},curSec='personal';
+function load(rows,sec){rows.forEach(function(a){PD[a[0]]={k:a[0],sec:sec,c:a[1],n:a[2],t:a[3],b:[a[4],a[5],a[6]],s:[a[7],a[8]],r:[[a[9],a[10]],[a[11],a[12]],[a[13],a[14]]],soon:!!a[15]};var key=sec+'|'+a[1];if(CI[key]===undefined){CI[key]=G[sec].length;G[sec].push([a[1],[]])}G[sec][CI[key]][1].push(a[0])})}
+load(PR,'personal');load(BR,'business');load(SR,'solutions');
+var LAY={personal:[
+['Accounts',['bank-account','savings-account','joint-account','professional-account','teen-account','parents']],
+['Borrow and build credit',['bnpl','personal-loans','credit-score','salary-advance']],
+['Cards and spending',['cards','virtual-cards','send-receive','bill-pay','subscriptions','split-bills','rewards','offers']],
+['Save and plan',['money-management','pots','linked-accounts','ai-coach']],
+['Invest',['stocks','mutual-funds','commodities','fixed-deposits','retirement']],
+['Crypto',['crypto','on-ramp','pro-trading']],
+['Travel and global',['intl-transfers','forex-card','mobile-plans','data-plans']],
+['Protect',['protect','lost-device','security-report','insurance-personal']]],
+business:[
+['Accounts and money movement',['banking-connectivity','payments','transfers','foreign-accounts','exchange','forex-forwards','virtual-accounts','payouts']],
+['Collect payments',['collections','accept-payments','in-person','online-payments','onix-pay','payment-links','subscription-billing','pos','stablecoin-payments']],
+['Spend and cards',['spend-management','corporate-cards','virtual-cards-biz','expenses','bills','procurement','travel','savings-insights','fleet-management']],
+['Accounting and compliance',['accounting-gl','ai-accounting','ap-ar','tax','e-invoicing','budgeting','company-compliance','cap-table']],
+['People and payroll',['payroll-core','global-hiring','people']],
+['AI CFO and insights',['ai-cfo','ai-forecasting','ai-reconciliation','analytics']],
+['Credit and treasury',['treasury','business-savings','business-crypto','lending','sme-finance','invoice-discounting','rbf','supply-chain-finance','b2b-bnpl','credit-report']],
+['Invest and protect',['insurance','wealth','asset-management','pre-ipo','angel-investing','global-markets']],
+['Corporate finance',['m-and-a','capital-raising','valuation','data-room','ai-investment-banker','consulting']],
+['Developers and platform',['apis','integrations','baas','kyc','fraud-risk','business-security','agent-payments']]],
+solutions:null};
+function relay(sec){var L=LAY[sec];if(!L)return;G[sec]=[];L.forEach(function(g,i){CI[sec+'|'+g[0]]=G[sec].length;G[sec].push([g[0],g[1].slice()]);g[1].forEach(function(k){PD[k].c=g[0]})})}
+relay('personal');relay('business');
+function mi(k){var d=PD[k];return '<button class="mi" data-p="'+k+'">'+d.n+(d.soon?' <span class="soon">Soon</span>':'')+'</button>'}
+var SPL={personal:[2,2,2,2],business:[2,2,3,3]};
+function cols(sec){var g=G[sec].map(function(c){return '<div class="mcol"><h4>'+c[0]+'</h4>'+c[1].map(mi).join('')+'</div>'}),sp=SPL[sec],o='',i=0;if(!sp){var n=Math.ceil(g.length/4);sp=[];for(var j=0;j<g.length;j+=n)sp.push(Math.min(n,g.length-j))}sp.forEach(function(n){o+='<div class="mc">'+g.slice(i,i+n).join('')+'</div>';i+=n});return o}
+function tiles(sec){return G[sec].map(function(c){return '<div class="tile"><h3>'+c[0]+'</h3><div class="mcol">'+c[1].map(mi).join('')+'</div></div>'}).join('')}
+$('#mgrid').innerHTML=cols('personal');$('#bgrid').innerHTML=cols('business');$('#sgrid').innerHTML=cols('solutions');$('#sallg').innerHTML=tiles('solutions');$('#allg').innerHTML=tiles('personal');$('#ballg').innerHTML=tiles('business');
+var nav=$('#nav'),tabP=$('#ptab'),tabB=$('#btab'),tabS=$('#stab'),mt=null,fine=matchMedia('(hover:hover) and (pointer:fine)').matches,MC={p:['mo-p',tabP],b:['mo-b',tabB],s:['mo-s',tabS]};
+function mega(o,w){nav.classList.remove('mo-p','mo-b','mo-s');[tabP,tabB,tabS].forEach(function(t){t.setAttribute('aria-expanded','false')});if(o){nav.classList.add(MC[w][0]);MC[w][1].setAttribute('aria-expanded','true')}}
+function isOpen(w){return nav.classList.contains(MC[w][0])}
+[[tabP,'p'],[tabB,'b'],[tabS,'s']].forEach(function(a){a[0].addEventListener('click',function(){mega(fine?true:!isOpen(a[1]),a[1])});if(fine)a[0].addEventListener('pointerenter',function(){clearTimeout(mt);mega(true,a[1])})});
+if(fine){$$('.tab').forEach(function(t){if(t!==tabP&&t!==tabB&&t!==tabS)t.addEventListener('pointerenter',function(){mega(false)})});nav.addEventListener('pointerleave',function(){mt=setTimeout(function(){mega(false)},220)});nav.addEventListener('pointerenter',function(){clearTimeout(mt)})}
+document.addEventListener('pointerdown',function(e){if(!e.target.closest('#nav'))mega(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){mega(false);tabP.focus()}});
+function renderP(k){var d=PD[k],sn={business:'Business',solutions:'Solutions'}[d.sec]||'Personal';curSec=d.sec;$('#ph1').innerHTML='<span class="ln"><span></span></span>';$('#ph1 span span').textContent=d.n;$('#plead').textContent=d.t;
+ var cr=$('#pcrumb');cr.textContent='← '+sn+' / '+d.c;cr.dataset.go=d.sec;var pb=$('#pback');pb.textContent='Back to '+sn;pb.dataset.go=d.sec;
+ $('[data-view=product] .heropanel').style.background=d.sec==='personal'?'':'linear-gradient(120deg,var(--p4),var(--p3))';
+ $('#psoon').innerHTML=d.soon?'<span class="chip">Coming soon</span><span class="chip">Subject to Indian regulation</span>':'';$('#pcta').textContent=d.soon?'Join the waitlist':(d.sec==='personal'?'Get the app':d.sec==='solutions'?'Talk to us':'Open a business account');
+ $('#pphl').textContent=d.n;$('#pbal').textContent=d.s[0];$('#pbl').textContent=d.s[1];
+ $('#prows').innerHTML=d.r.map(function(x){return '<div class="tx"><div>'+x[0]+'</div><span class="'+(x[1][0]==='+'?'up':'')+'">'+x[1]+'</span></div>'}).join('');
+ $('#pai').textContent=d.soon?'We will tell you when this is ready.':(d.sec==='personal'?'ONIX AI: ':'AI CFO: ')+d.b[0]+'.';
+ $('#pbul').innerHTML=d.b.map(function(x){return '<div class="tile"><span class="ico">✓</span><h3>'+x+'</h3></div>'}).join('');
+ $('#pcat').textContent=d.c;$('#prel').innerHTML=G[d.sec][CI[d.sec+'|'+d.c]][1].filter(function(x){return x!==k}).map(function(x){return '<button class="btn sec" data-p="'+x+'">'+PD[x].n+'</button>'}).join('')}
+document.addEventListener('click',function(e){var p=e.target.closest('[data-p]');if(p){show('p-'+p.dataset.p)}else if(e.target.closest('[data-go]'))mega(false)});
+
+/* views */
+var views=$$('[data-view]'),tabs=$$('.tab');
+function show(v){var hash=v;mega(false);if(v.indexOf('p-')===0&&PD[v.slice(2)]){renderP(v.slice(2));v='product'}if(!views.some(function(e){return e.dataset.view===v}))v='personal';views.forEach(function(e){e.classList.toggle('on',e.dataset.view===v)});tabs.forEach(function(b){b.classList.toggle('cur',(b.dataset.go||b.dataset.tab)===(v==='product'?curSec:v))});
+ $$('.ln>span,.fade',$('[data-view='+v+']')).forEach(function(h){h.style.animation='none';h.getBoundingClientRect();h.style.animation=''});
+ scrollTo(0,0);try{history.replaceState(null,'','#'+hash)}catch(e){}requestAnimationFrame(function(){prep(v)})}
+document.addEventListener('click',function(e){var g=e.target.closest('[data-go]');if(g)show(g.dataset.go)});
+show((location.hash||'').slice(1));
+})();
+</script>
+
+</body></html>

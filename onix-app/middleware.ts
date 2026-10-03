@@ -6,6 +6,12 @@ const PUBLIC_AUTH = ['/login', '/register'];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Serve new landing page at root
+  if (pathname === '/') {
+    return NextResponse.rewrite(new URL('/bank.html', req.url));
+  }
+
   const res = NextResponse.next();
 
   // Create Supabase client that can read/write cookies in middleware
@@ -61,6 +67,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    '/',
     '/dashboard/:path*', '/pipeline/:path*', '/deal-room/:path*', '/calculator/:path*',
     '/valuation/:path*', '/debt-engine/:path*', '/matching/:path*', '/investors/:path*',
     '/outreach/:path*', '/listings/:path*', '/copilot/:path*', '/news/:path*',

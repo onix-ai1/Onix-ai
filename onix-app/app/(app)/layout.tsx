@@ -48,6 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDesktop, setIsDesktop]     = useState(true);
   const [lpModal, setLpModal]         = useState(false);
+  const [comingSoon, setComingSoon]   = useState('');
   const [lpForm, setLpForm]           = useState({ name: '', email: '', phone: '', company: '', ticket: '', message: '' });
   const [lpLoading, setLpLoading]     = useState(false);
   const [lpSuccess, setLpSuccess]     = useState(false);
@@ -201,6 +202,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               { label: 'Capital Markets / Algo', icon: CapitalIcon },
             ].map(svc => (
               <button key={svc.label} onClick={() => openWhatsApp(svc.label)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 2, fontSize: 14, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--onix-gold)'; e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
+              >
+                <svc.icon size={16} />
+                {svc.label}
+              </button>
+            ))}
+            {/* Coming Soon items */}
+            {[
+              { label: 'AI Accounting', icon: AccountingIcon },
+              { label: 'SME Finance',   icon: SmeIcon },
+            ].map(svc => (
+              <button key={svc.label} onClick={() => setComingSoon(svc.label)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 2, fontSize: 14, fontWeight: 500, color: 'var(--onix-muted)', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'color 0.15s, background 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.color = 'var(--onix-gold)'; e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'var(--onix-muted)'; e.currentTarget.style.background = 'transparent'; }}
@@ -368,6 +383,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
+      {/* ── Coming Soon Modal ── */}
+      {comingSoon && (
+        <div onClick={() => setComingSoon('')} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 380, borderRadius: 20, background: 'var(--onix-surface)', border: '1px solid var(--onix-border)', padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: 'rgba(201,168,76,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--onix-gold)" strokeWidth={1.5}>
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--onix-text)', margin: '0 0 8px' }}>{comingSoon}</p>
+              <p style={{ fontSize: 14, color: 'var(--onix-muted)', margin: 0, lineHeight: 1.6 }}>We're working on this feature.<br />It will be available soon.</p>
+            </div>
+            <div style={{ width: '100%', height: 4, borderRadius: 4, background: 'var(--onix-border)', overflow: 'hidden', marginTop: 4 }}>
+              <div style={{ height: '100%', width: '65%', borderRadius: 4, background: 'linear-gradient(90deg, var(--onix-gold), rgba(201,168,76,0.4))', animation: 'pulse 2s ease-in-out infinite' }} />
+            </div>
+            <p style={{ fontSize: 12, color: 'var(--onix-muted)', margin: 0 }}>65% complete</p>
+            <button onClick={() => setComingSoon('')} style={{ marginTop: 4, padding: '10px 28px', borderRadius: 8, background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)', color: 'var(--onix-gold)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── LP Application Modal ── */}
       {lpModal && (
         <div onClick={() => setLpModal(false)} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
@@ -444,6 +483,12 @@ function CapitalIcon({ size = 16 }: { size?: number }) {
 }
 function PrivateEqIcon({ size = 16 }: { size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>;
+}
+function AccountingIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>;
+}
+function SmeIcon({ size = 16 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 8h.01M10 8h8M6 12h4M14 12h4"/></svg>;
 }
 
 /* ── Inline SVG icons ── */
